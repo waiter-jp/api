@@ -1,0 +1,18 @@
+node_modules/
+iisnode/
+npm-debug.log*
+.vscode/
+.env*
+docs/
+app.yaml*
+**/*.log
+
+.googleappengine/*
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+!.gitignore
+!.gitkeep
