@@ -18,12 +18,20 @@ const httpStatus = require("http-status");
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
 const redis = require("redis");
+const tedious = require("tedious");
 const counter_1 = require("../model/mongoose/counter");
 const debug = createDebug('waiter-prototype:controller:token');
 const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST, {
     password: process.env.REDIS_KEY,
     tls: { servername: process.env.REDIS_HOST },
     return_buffers: false
+});
+const connection = new tedious.Connection({
+    userName: process.env.SQL_DATABASE_USERNAME,
+    password: process.env.SQL_DATABASE_PASSWORD,
+    server: process.env.SQL_DATABASE_SERVER,
+    // If you're on Windows Azure, you will need this:
+    options: { encrypt: true }
 });
 const WAITER_SCOPE = 'waiter';
 const sequenceCountUnitPerSeconds = Number(process.env.WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS);
@@ -100,6 +108,37 @@ function publishWithRedis(__, res, next) {
     });
 }
 exports.publishWithRedis = publishWithRedis;
+function publishWithSQLServer(__1, __2, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            connection.on('connect', (connectErr) => {
+                if (connectErr instanceof Error) {
+                    next(connectErr);
+                    return;
+                }
+                const request = new tedious.Request('select 42, \'hello world\'', (err, rowCount) => {
+                    if (err instanceof Error) {
+                        next(err);
+                    }
+                    else {
+                        debug('rowCount:', rowCount);
+                        next(new Error('not implemented'));
+                    }
+                });
+                // request.on('row', (columns) => {
+                //     columns.forEach((column) => {
+                //         console.log(column.value);
+                //     });
+                // });
+                connection.execSql(request);
+            });
+        }
+        catch (error) {
+            next(error);
+        }
+    });
+}
+exports.publishWithSQLServer = publishWithSQLServer;
 /**
  * カウント単位キーを作成する
  *

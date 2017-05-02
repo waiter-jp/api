@@ -17,5 +17,5 @@ router.post('/redis', (__1, __2, next) => {
 }, validator_1.default, tokenController.publishWithRedis);
 router.post('/sqlserver', (__1, __2, next) => {
     next();
-}, validator_1.default, tokenController.publishWithRedis);
+}, validator_1.default, tokenController.publishWithSQLServer);
 exports.default = router;

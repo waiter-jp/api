@@ -10,6 +10,7 @@ import * as httpStatus from 'http-status';
 import * as jwt from 'jsonwebtoken';
 import * as moment from 'moment';
 import * as redis from 'redis';
+import * as tedious from 'tedious';
 
 import Counter from '../model/mongoose/counter';
 
@@ -23,6 +24,15 @@ const redisClient = redis.createClient(
         return_buffers: false
     }
 );
+
+const connection = new tedious.Connection({
+    userName: process.env.SQL_DATABASE_USERNAME,
+    password: process.env.SQL_DATABASE_PASSWORD,
+    server: process.env.SQL_DATABASE_SERVER,
+
+    // If you're on Windows Azure, you will need this:
+    options: { encrypt: true }
+});
 
 const WAITER_SCOPE = 'waiter';
 const sequenceCountUnitPerSeconds = Number(process.env.WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS);
@@ -93,6 +103,36 @@ export async function publishWithRedis(__: Request, res: Response, next: NextFun
                     }
                 }
             });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function publishWithSQLServer(__1: Request, __2: Response, next: NextFunction) {
+    try {
+        connection.on('connect', (connectErr: any) => {
+            if (connectErr instanceof Error) {
+                next(connectErr);
+                return;
+            }
+
+            const request = new tedious.Request('select 42, \'hello world\'', (err, rowCount) => {
+                if (err instanceof Error) {
+                    next(err);
+                } else {
+                    debug('rowCount:', rowCount);
+                    next(new Error('not implemented'));
+                }
+            });
+
+            // request.on('row', (columns) => {
+            //     columns.forEach((column) => {
+            //         console.log(column.value);
+            //     });
+            // });
+
+            connection.execSql(request);
+        });
     } catch (error) {
         next(error);
     }

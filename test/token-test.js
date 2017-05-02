@@ -16,13 +16,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
 const httpStatus = require("http-status");
 const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app/app");
-let connection;
 before(() => __awaiter(this, void 0, void 0, function* () {
-    // 全て削除してからテスト開始
-    connection = mongoose.createConnection(process.env.MONGOLAB_URI);
 }));
 describe('POST /token/mongodb', () => {
     it('ok', () => __awaiter(this, void 0, void 0, function* () {

@@ -35,7 +35,7 @@ router.post(
         next();
     },
     validator,
-    tokenController.publishWithRedis
+    tokenController.publishWithSQLServer
 );
 
 export default router;
