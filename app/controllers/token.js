@@ -19,7 +19,7 @@ const jwt = require("jsonwebtoken");
 const moment = require("moment");
 const redis = require("redis");
 const tedious = require("tedious");
-const counter_1 = require("../model/mongoose/counter");
+const counter_1 = require("../models/mongoose/counter");
 const debug = createDebug('waiter-prototype:controller:token');
 const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST, {
     password: process.env.REDIS_KEY,
@@ -40,9 +40,7 @@ function publishWithMongo(__, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const key = createKey(WAITER_SCOPE);
-            const counter = yield counter_1.default.findOneAndUpdate({
-                key: key
-            }, { $inc: { count: +1 } }, {
+            const counter = yield counter_1.default.findOneAndUpdate({ key: key }, { $inc: { count: +1 } }, {
                 new: true,
                 upsert: true
             }).exec();
@@ -71,11 +69,10 @@ function publishWithRedis(__, res, next) {
         try {
             const key = createKey(WAITER_SCOPE);
             const ttl = sequenceCountUnitPerSeconds;
-            // start a separate multi command queue
             const multi = redisClient.multi();
             multi
-                .incr(key)
-                .expire(key, ttl)
+                .incr(key, debug)
+                .expire(key, ttl, debug)
                 .exec((execErr, replies) => __awaiter(this, void 0, void 0, function* () {
                 if (execErr instanceof Error) {
                     next(execErr);

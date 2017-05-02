@@ -6,12 +6,12 @@
 
 import { Router } from 'express';
 
-import * as tokenController from '../controller/token';
+import * as tokenController from '../controllers/token';
 import validator from '../middlewares/validator';
 
 const router = Router();
 
-router.post(
+router.all(
     '/mongodb',
     (__1, __2, next) => {
         next();
@@ -20,7 +20,7 @@ router.post(
     tokenController.publishWithMongo
 );
 
-router.post(
+router.all(
     '/redis',
     (__1, __2, next) => {
         next();
@@ -29,7 +29,7 @@ router.post(
     tokenController.publishWithRedis
 );
 
-router.post(
+router.all(
     '/sqlserver',
     (__1, __2, next) => {
         next();

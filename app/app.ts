@@ -15,6 +15,7 @@ import * as mongoose from 'mongoose';
 import mongooseConnectionOptions from '../mongooseConnectionOptions';
 
 import basicAuth from './middlewares/basicAuth';
+import benchmarks from './middlewares/benchmarks';
 import errorHandler from './middlewares/errorHandler';
 import notFoundHandler from './middlewares/notFoundHandler';
 
@@ -25,6 +26,7 @@ const debug = createDebug('waiter-prototype:*');
 
 const app = express();
 
+app.use(benchmarks); // ベンチマーク
 app.use(basicAuth); // ベーシック認証
 app.use(cors()); // enable All CORS Requests
 app.use(helmet());

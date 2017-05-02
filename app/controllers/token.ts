@@ -12,7 +12,7 @@ import * as moment from 'moment';
 import * as redis from 'redis';
 import * as tedious from 'tedious';
 
-import Counter from '../model/mongoose/counter';
+import Counter from '../models/mongoose/counter';
 
 const debug = createDebug('waiter-prototype:controller:token');
 const redisClient = redis.createClient(
@@ -42,9 +42,7 @@ export async function publishWithMongo(__: Request, res: Response, next: NextFun
     try {
         const key = createKey(WAITER_SCOPE);
         const counter = await Counter.findOneAndUpdate(
-            {
-                key: key
-            },
+            { key: key },
             { $inc: { count: +1 } },
             {
                 new: true,
@@ -74,11 +72,10 @@ export async function publishWithRedis(__: Request, res: Response, next: NextFun
         const key = createKey(WAITER_SCOPE);
         const ttl = sequenceCountUnitPerSeconds;
 
-        // start a separate multi command queue
         const multi = redisClient.multi();
         multi
-            .incr(key)
-            .expire(key, ttl)
+            .incr(key, debug)
+            .expire(key, ttl, debug)
             .exec(async (execErr, replies) => {
                 if (execErr instanceof Error) {
                     next(execErr);
@@ -157,7 +154,7 @@ function createKey(scope: string) {
  * @param {string} count カウント
  * @returns {Promise<string>}
  */
-async function createToken(scope: string, key: string, count: string) {
+async function createToken(scope: string, key: string, count: number) {
     return new Promise<string>((resolve, reject) => {
         jwt.sign(
             {

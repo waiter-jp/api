@@ -13,12 +13,14 @@ const helmet = require("helmet");
 const mongoose = require("mongoose");
 const mongooseConnectionOptions_1 = require("../mongooseConnectionOptions");
 const basicAuth_1 = require("./middlewares/basicAuth");
+const benchmarks_1 = require("./middlewares/benchmarks");
 const errorHandler_1 = require("./middlewares/errorHandler");
 const notFoundHandler_1 = require("./middlewares/notFoundHandler");
 const dev_1 = require("./routes/dev");
 const token_1 = require("./routes/token");
 const debug = createDebug('waiter-prototype:*');
 const app = express();
+app.use(benchmarks_1.default); // ベンチマーク
 app.use(basicAuth_1.default); // ベーシック認証
 app.use(cors()); // enable All CORS Requests
 app.use(helmet());
