@@ -41,22 +41,22 @@ const numberOfTokensPerUnit = Number(process.env.WAITER_NUMBER_OF_TOKENS_PER_UNI
 export async function publishWithMongo(__: Request, res: Response, next: NextFunction) {
     try {
         const key = createKey(WAITER_SCOPE);
-        const counter = await Counter.findOneAndUpdate(
+        const counter = <any>await Counter.findOneAndUpdate(
             { key: key },
             { $inc: { count: +1 } },
             {
                 new: true,
                 upsert: true
             }
-        ).exec();
+        ).lean().exec();
         debug('counter:', counter);
 
-        if (counter.get('count') > numberOfTokensPerUnit) {
+        if (counter.count > numberOfTokensPerUnit) {
             res.status(httpStatus.NOT_FOUND).json({
                 data: null
             });
         } else {
-            const token = await createToken(WAITER_SCOPE, counter.get('key'), counter.get('count'));
+            const token = await createToken(WAITER_SCOPE, counter.key, counter.count);
             res.json({
                 token: token,
                 expires_in: sequenceCountUnitPerSeconds

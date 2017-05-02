@@ -43,15 +43,15 @@ function publishWithMongo(__, res, next) {
             const counter = yield counter_1.default.findOneAndUpdate({ key: key }, { $inc: { count: +1 } }, {
                 new: true,
                 upsert: true
-            }).exec();
+            }).lean().exec();
             debug('counter:', counter);
-            if (counter.get('count') > numberOfTokensPerUnit) {
+            if (counter.count > numberOfTokensPerUnit) {
                 res.status(httpStatus.NOT_FOUND).json({
                     data: null
                 });
             }
             else {
-                const token = yield createToken(WAITER_SCOPE, counter.get('key'), counter.get('count'));
+                const token = yield createToken(WAITER_SCOPE, counter.key, counter.count);
                 res.json({
                     token: token,
                     expires_in: sequenceCountUnitPerSeconds
