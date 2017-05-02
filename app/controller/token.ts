@@ -11,7 +11,7 @@ import * as jwt from 'jsonwebtoken';
 import * as moment from 'moment';
 import * as redis from 'redis';
 
-import Sequence from '../model/mongoose/sequence';
+import Counter from '../model/mongoose/counter';
 
 const debug = createDebug('waiter-prototype:controller:token');
 const redisClient = redis.createClient(
@@ -25,34 +25,33 @@ const redisClient = redis.createClient(
 );
 
 const WAITER_SCOPE = 'waiter';
-const WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS = 60;
-const WAITER_NUMBER_OF_TOKENS_PER_UNIT = 30;
+const sequenceCountUnitPerSeconds = Number(process.env.WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS);
+const numberOfTokensPerUnit = Number(process.env.WAITER_NUMBER_OF_TOKENS_PER_UNIT);
 
 export async function publishWithMongo(__: Request, res: Response, next: NextFunction) {
     try {
-        const dateNow = moment();
-        // tslint:disable-next-line:no-magic-numbers
-        const countedFrom = moment((dateNow.unix() - dateNow.unix() % WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS) * 1000).toDate();
-        const sequence = await Sequence.findOneAndUpdate(
+        const key = createKey(WAITER_SCOPE);
+        const counter = await Counter.findOneAndUpdate(
             {
-                counted_from: countedFrom
+                key: key
             },
-            { $inc: { place: +1 } },
+            { $inc: { count: +1 } },
             {
                 new: true,
                 upsert: true
             }
         ).exec();
+        debug('counter:', counter);
 
-        if (sequence.get('place') > WAITER_NUMBER_OF_TOKENS_PER_UNIT) {
+        if (counter.get('count') > numberOfTokensPerUnit) {
             res.status(httpStatus.NOT_FOUND).json({
                 data: null
             });
         } else {
-            const token = await createToken(WAITER_SCOPE, sequence.get('counted_from'), sequence.get('place'));
+            const token = await createToken(WAITER_SCOPE, counter.get('key'), counter.get('count'));
             res.json({
                 token: token,
-                expires_in: WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS
+                expires_in: sequenceCountUnitPerSeconds
             });
         }
     } catch (error) {
@@ -62,11 +61,8 @@ export async function publishWithMongo(__: Request, res: Response, next: NextFun
 
 export async function publishWithRedis(__: Request, res: Response, next: NextFunction) {
     try {
-        const dateNow = moment();
-        // tslint:disable-next-line:no-magic-numbers
-        const countedFrom = moment((dateNow.unix() - dateNow.unix() % WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS) * 1000);
-        const key = countedFrom.unix();
-        const ttl = WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS;
+        const key = createKey(WAITER_SCOPE);
+        const ttl = sequenceCountUnitPerSeconds;
 
         // start a separate multi command queue
         const multi = redisClient.multi();
@@ -80,17 +76,17 @@ export async function publishWithRedis(__: Request, res: Response, next: NextFun
                 }
                 debug('replies:', replies);
 
-                const place = replies[0];
-                if (place > WAITER_NUMBER_OF_TOKENS_PER_UNIT) {
+                const count = replies[0];
+                if (count > numberOfTokensPerUnit) {
                     res.status(httpStatus.NOT_FOUND).json({
                         data: null
                     });
                 } else {
                     try {
-                        const token = await createToken(WAITER_SCOPE, countedFrom.toDate(), place);
+                        const token = await createToken(WAITER_SCOPE, key, count);
                         res.json({
                             token: token,
-                            expires_in: WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS
+                            expires_in: sequenceCountUnitPerSeconds
                         });
                     } catch (error) {
                         next(error);
@@ -102,17 +98,36 @@ export async function publishWithRedis(__: Request, res: Response, next: NextFun
     }
 }
 
-async function createToken(scope: string, countedFrom: Date, place: string) {
+/**
+ * カウント単位キーを作成する
+ *
+ * @param {string} scope カウント単位スコープ
+ * @returns {string}
+ */
+function createKey(scope: string) {
+    const dateNow = moment();
+    return scope + (dateNow.unix() - dateNow.unix() % sequenceCountUnitPerSeconds).toString();
+}
+
+/**
+ * トークンを生成する
+ *
+ * @param {string} scope スコープ
+ * @param {string} key キー
+ * @param {string} count カウント
+ * @returns {Promise<string>}
+ */
+async function createToken(scope: string, key: string, count: string) {
     return new Promise<string>((resolve, reject) => {
         jwt.sign(
             {
                 scope: scope,
-                counted_from: countedFrom,
-                place: place
+                key: key,
+                count: count
             },
             process.env.WAITER_SECRET,
             {
-                expiresIn: WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS
+                expiresIn: sequenceCountUnitPerSeconds
             },
             (err, encoded) => {
                 if (err instanceof Error) {

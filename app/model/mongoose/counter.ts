@@ -1,17 +1,17 @@
 import * as mongoose from 'mongoose';
 
 /**
- * 順番カウンタースキーマ
+ * カウンタースキーマ
  *
  * @ignore
  */
 const schema = new mongoose.Schema(
     {
-        counted_from: Date, // いつ順番を数え始めたか
-        place: Number // 何番目
+        key: String, // カウンター単位キー
+        count: Number // 何番目
     },
     {
-        collection: 'sequences',
+        collection: 'counters',
         id: true,
         read: 'primaryPreferred',
         safe: <any>{ j: 1, w: 'majority', wtimeout: 10000 },
@@ -24,4 +24,4 @@ const schema = new mongoose.Schema(
     }
 );
 
-export default mongoose.model('Sequence', schema);
+export default mongoose.model('Counter', schema);

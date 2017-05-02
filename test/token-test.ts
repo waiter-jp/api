@@ -31,7 +31,8 @@ describe('POST /token/mongodb', () => {
 
                 const decoded = jwt.verify(<string>response.body.token, <string>process.env.WAITER_SECRET);
                 assert(typeof decoded.scope === 'string');
-                assert(typeof decoded.place === 'number');
+                assert(typeof decoded.key === 'string');
+                assert(typeof decoded.count === 'number');
             });
     });
 });
@@ -49,7 +50,8 @@ describe('POST /token/redis', () => {
 
                 const decoded = jwt.verify(<string>response.body.token, <string>process.env.WAITER_SECRET);
                 assert(typeof decoded.scope === 'string');
-                assert(typeof decoded.place === 'number');
+                assert(typeof decoded.key === 'string');
+                assert(typeof decoded.count === 'number');
             });
     });
 });

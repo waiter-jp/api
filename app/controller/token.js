@@ -18,7 +18,7 @@ const httpStatus = require("http-status");
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
 const redis = require("redis");
-const sequence_1 = require("../model/mongoose/sequence");
+const counter_1 = require("../model/mongoose/counter");
 const debug = createDebug('waiter-prototype:controller:token');
 const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST, {
     password: process.env.REDIS_KEY,
@@ -26,30 +26,29 @@ const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS
     return_buffers: false
 });
 const WAITER_SCOPE = 'waiter';
-const WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS = 60;
-const WAITER_NUMBER_OF_TOKENS_PER_UNIT = 30;
+const sequenceCountUnitPerSeconds = Number(process.env.WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS);
+const numberOfTokensPerUnit = Number(process.env.WAITER_NUMBER_OF_TOKENS_PER_UNIT);
 function publishWithMongo(__, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const dateNow = moment();
-            // tslint:disable-next-line:no-magic-numbers
-            const countedFrom = moment((dateNow.unix() - dateNow.unix() % WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS) * 1000).toDate();
-            const sequence = yield sequence_1.default.findOneAndUpdate({
-                counted_from: countedFrom
-            }, { $inc: { place: +1 } }, {
+            const key = createKey(WAITER_SCOPE);
+            const counter = yield counter_1.default.findOneAndUpdate({
+                key: key
+            }, { $inc: { count: +1 } }, {
                 new: true,
                 upsert: true
             }).exec();
-            if (sequence.get('place') > WAITER_NUMBER_OF_TOKENS_PER_UNIT) {
+            debug('counter:', counter);
+            if (counter.get('count') > numberOfTokensPerUnit) {
                 res.status(httpStatus.NOT_FOUND).json({
                     data: null
                 });
             }
             else {
-                const token = yield createToken(WAITER_SCOPE, sequence.get('counted_from'), sequence.get('place'));
+                const token = yield createToken(WAITER_SCOPE, counter.get('key'), counter.get('count'));
                 res.json({
                     token: token,
-                    expires_in: WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS
+                    expires_in: sequenceCountUnitPerSeconds
                 });
             }
         }
@@ -62,11 +61,8 @@ exports.publishWithMongo = publishWithMongo;
 function publishWithRedis(__, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const dateNow = moment();
-            // tslint:disable-next-line:no-magic-numbers
-            const countedFrom = moment((dateNow.unix() - dateNow.unix() % WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS) * 1000);
-            const key = countedFrom.unix();
-            const ttl = WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS;
+            const key = createKey(WAITER_SCOPE);
+            const ttl = sequenceCountUnitPerSeconds;
             // start a separate multi command queue
             const multi = redisClient.multi();
             multi
@@ -78,18 +74,18 @@ function publishWithRedis(__, res, next) {
                     return;
                 }
                 debug('replies:', replies);
-                const place = replies[0];
-                if (place > WAITER_NUMBER_OF_TOKENS_PER_UNIT) {
+                const count = replies[0];
+                if (count > numberOfTokensPerUnit) {
                     res.status(httpStatus.NOT_FOUND).json({
                         data: null
                     });
                 }
                 else {
                     try {
-                        const token = yield createToken(WAITER_SCOPE, countedFrom.toDate(), place);
+                        const token = yield createToken(WAITER_SCOPE, key, count);
                         res.json({
                             token: token,
-                            expires_in: WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS
+                            expires_in: sequenceCountUnitPerSeconds
                         });
                     }
                     catch (error) {
@@ -104,15 +100,33 @@ function publishWithRedis(__, res, next) {
     });
 }
 exports.publishWithRedis = publishWithRedis;
-function createToken(scope, countedFrom, place) {
+/**
+ * カウント単位キーを作成する
+ *
+ * @param {string} scope カウント単位スコープ
+ * @returns {string}
+ */
+function createKey(scope) {
+    const dateNow = moment();
+    return scope + (dateNow.unix() - dateNow.unix() % sequenceCountUnitPerSeconds).toString();
+}
+/**
+ * トークンを生成する
+ *
+ * @param {string} scope スコープ
+ * @param {string} key キー
+ * @param {string} count カウント
+ * @returns {Promise<string>}
+ */
+function createToken(scope, key, count) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
             jwt.sign({
                 scope: scope,
-                counted_from: countedFrom,
-                place: place
+                key: key,
+                count: count
             }, process.env.WAITER_SECRET, {
-                expiresIn: WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS
+                expiresIn: sequenceCountUnitPerSeconds
             }, (err, encoded) => {
                 if (err instanceof Error) {
                     reject(err);

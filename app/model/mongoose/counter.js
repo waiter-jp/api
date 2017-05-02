@@ -2,15 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
 /**
- * 順番カウンタースキーマ
+ * カウンタースキーマ
  *
  * @ignore
  */
 const schema = new mongoose.Schema({
-    counted_from: Date,
-    place: Number // 何番目
+    key: String,
+    count: Number // 何番目
 }, {
-    collection: 'sequences',
+    collection: 'counters',
     id: true,
     read: 'primaryPreferred',
     safe: { j: 1, w: 'majority', wtimeout: 10000 },
@@ -21,4 +21,4 @@ const schema = new mongoose.Schema({
     toJSON: { getters: true },
     toObject: { getters: true }
 });
-exports.default = mongoose.model('Sequence', schema);
+exports.default = mongoose.model('Counter', schema);
