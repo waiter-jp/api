@@ -26,12 +26,21 @@ const redisClient = redis.createClient(
 );
 
 const connection = new tedious.Connection({
-    userName: process.env.SQL_DATABASE_USERNAME,
-    password: process.env.SQL_DATABASE_PASSWORD,
-    server: process.env.SQL_DATABASE_SERVER,
+    userName: process.env.SQL_SERVER_USERNAME,
+    password: process.env.SQL_SERVER_PASSWORD,
+    server: process.env.SQL_SERVER_SERVER,
 
     // If you're on Windows Azure, you will need this:
-    options: { encrypt: true }
+    options: {
+        database: process.env.SQL_SERVER_DATABASE,
+        encrypt: true
+    }
+});
+
+connection.on('connect', (connectErr: any) => {
+    if (connectErr instanceof Error) {
+        console.error(connectErr);
+    }
 });
 
 const WAITER_SCOPE = 'waiter';
@@ -105,31 +114,51 @@ export async function publishWithRedis(__: Request, res: Response, next: NextFun
     }
 }
 
-export async function publishWithSQLServer(__1: Request, __2: Response, next: NextFunction) {
+export async function publishWithSQLServer(__1: Request, res: Response, next: NextFunction) {
     try {
-        connection.on('connect', (connectErr: any) => {
-            if (connectErr instanceof Error) {
-                next(connectErr);
-                return;
-            }
+        const key = createKey(WAITER_SCOPE);
+        let nextCount: number;
 
-            const request = new tedious.Request('select 42, \'hello world\'', (err, rowCount) => {
-                if (err instanceof Error) {
-                    next(err);
+        // tslint:disable-next-line:no-multiline-string
+        const sql = `
+MERGE INTO counters AS A
+    USING (SELECT '${key}' AS unit) AS B
+    ON (A.unit = B.unit)
+    WHEN MATCHED THEN
+        UPDATE SET count = count + 1
+    WHEN NOT MATCHED THEN
+        INSERT (unit, count) VALUES ('${key}', '0');
+SELECT count FROM counters WHERE unit = '${key}';
+`;
+        debug('sql:', sql);
+        const request = new tedious.Request(sql, async (err) => {
+            if (err instanceof Error) {
+                next(err);
+            } else {
+                if (nextCount > numberOfTokensPerUnit) {
+                    res.status(httpStatus.NOT_FOUND).json({
+                        data: null
+                    });
                 } else {
-                    debug('rowCount:', rowCount);
-                    next(new Error('not implemented'));
+                    try {
+                        const token = await createToken(WAITER_SCOPE, key, nextCount);
+                        res.json({
+                            token: token,
+                            expires_in: sequenceCountUnitPerSeconds
+                        });
+                    } catch (error) {
+                        next(error);
+                    }
                 }
-            });
-
-            // request.on('row', (columns) => {
-            //     columns.forEach((column) => {
-            //         console.log(column.value);
-            //     });
-            // });
-
-            connection.execSql(request);
+            }
         });
+
+        request.on('row', (columns: any[]) => {
+            debug('count:', columns[0].value);
+            nextCount = columns[0].value;
+        });
+
+        connection.execSql(request);
     } catch (error) {
         next(error);
     }
