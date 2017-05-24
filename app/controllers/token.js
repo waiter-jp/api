@@ -17,9 +17,8 @@ const createDebug = require("debug");
 const httpStatus = require("http-status");
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
-const tedious = require("tedious");
+const getSqlServerConnection_1 = require("../db/getSqlServerConnection");
 const redisClient_1 = require("../db/redisClient");
-const sqlServerConnection_1 = require("../db/sqlServerConnection");
 const counter_1 = require("../models/mongoose/counter");
 const debug = createDebug('waiter-prototype:controller:token');
 const WAITER_SCOPE = 'waiter';
@@ -97,49 +96,34 @@ exports.publishWithRedis = publishWithRedis;
 function publishWithSQLServer(__1, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const pool = yield getSqlServerConnection_1.default();
             const key = createKey(WAITER_SCOPE);
-            let nextCount;
-            // tslint:disable-next-line:no-multiline-string
-            const sql = `
+            const result = yield pool.query `
 MERGE INTO counters AS A
-    USING (SELECT '${key}' AS unit) AS B
+    USING (SELECT ${key} AS unit) AS B
     ON (A.unit = B.unit)
     WHEN MATCHED THEN
         UPDATE SET count = count + 1
     WHEN NOT MATCHED THEN
-        INSERT (unit, count) VALUES ('${key}', '0');
-SELECT count FROM counters WHERE unit = '${key}';
+        INSERT (unit, count) VALUES (${key}, '0');
+SELECT count FROM counters WHERE unit = ${key};
 `;
-            debug('sql:', sql);
-            const request = new tedious.Request(sql, (err) => __awaiter(this, void 0, void 0, function* () {
-                if (err instanceof Error) {
-                    next(err);
-                }
-                else {
-                    if (nextCount > numberOfTokensPerUnit) {
-                        res.status(httpStatus.NOT_FOUND).json({
-                            data: null
-                        });
-                    }
-                    else {
-                        try {
-                            const token = yield createToken(WAITER_SCOPE, key, nextCount);
-                            res.json({
-                                token: token,
-                                expires_in: sequenceCountUnitPerSeconds
-                            });
-                        }
-                        catch (error) {
-                            next(error);
-                        }
-                    }
-                }
-            }));
-            request.on('row', (columns) => {
-                debug('count:', columns[0].value);
-                nextCount = columns[0].value;
-            });
-            sqlServerConnection_1.default.execSql(request);
+            debug('result', result);
+            // tslint:disable-next-line:no-magic-numbers
+            const nextCount = parseInt(result.recordset[0].count, 10);
+            debug('nextCount', nextCount);
+            if (nextCount > numberOfTokensPerUnit) {
+                res.status(httpStatus.NOT_FOUND).json({
+                    data: null
+                });
+            }
+            else {
+                const token = yield createToken(WAITER_SCOPE, key, nextCount);
+                res.json({
+                    token: token,
+                    expires_in: sequenceCountUnitPerSeconds
+                });
+            }
         }
         catch (error) {
             next(error);

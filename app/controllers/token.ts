@@ -9,10 +9,9 @@ import { NextFunction, Request, Response } from 'express';
 import * as httpStatus from 'http-status';
 import * as jwt from 'jsonwebtoken';
 import * as moment from 'moment';
-import * as tedious from 'tedious';
 
+import getSqlServerConnection from '../db/getSqlServerConnection';
 import redisClient from '../db/redisClient';
-import sqlServerConnection from '../db/sqlServerConnection';
 
 import Counter from '../models/mongoose/counter';
 
@@ -92,49 +91,34 @@ export async function publishWithRedis(__: Request, res: Response, next: NextFun
 
 export async function publishWithSQLServer(__1: Request, res: Response, next: NextFunction) {
     try {
+        const pool = await getSqlServerConnection();
         const key = createKey(WAITER_SCOPE);
-        let nextCount: number;
-
-        // tslint:disable-next-line:no-multiline-string
-        const sql = `
+        const result = await pool.query`
 MERGE INTO counters AS A
-    USING (SELECT '${key}' AS unit) AS B
+    USING (SELECT ${key} AS unit) AS B
     ON (A.unit = B.unit)
     WHEN MATCHED THEN
         UPDATE SET count = count + 1
     WHEN NOT MATCHED THEN
-        INSERT (unit, count) VALUES ('${key}', '0');
-SELECT count FROM counters WHERE unit = '${key}';
+        INSERT (unit, count) VALUES (${key}, '0');
+SELECT count FROM counters WHERE unit = ${key};
 `;
-        debug('sql:', sql);
-        const request = new tedious.Request(sql, async (err) => {
-            if (err instanceof Error) {
-                next(err);
-            } else {
-                if (nextCount > numberOfTokensPerUnit) {
-                    res.status(httpStatus.NOT_FOUND).json({
-                        data: null
-                    });
-                } else {
-                    try {
-                        const token = await createToken(WAITER_SCOPE, key, nextCount);
-                        res.json({
-                            token: token,
-                            expires_in: sequenceCountUnitPerSeconds
-                        });
-                    } catch (error) {
-                        next(error);
-                    }
-                }
-            }
-        });
 
-        request.on('row', (columns: any[]) => {
-            debug('count:', columns[0].value);
-            nextCount = columns[0].value;
-        });
-
-        sqlServerConnection.execSql(request);
+        debug('result', result);
+        // tslint:disable-next-line:no-magic-numbers
+        const nextCount = parseInt(result.recordset[0].count, 10);
+        debug('nextCount', nextCount);
+        if (nextCount > numberOfTokensPerUnit) {
+            res.status(httpStatus.NOT_FOUND).json({
+                data: null
+            });
+        } else {
+            const token = await createToken(WAITER_SCOPE, key, nextCount);
+            res.json({
+                token: token,
+                expires_in: sequenceCountUnitPerSeconds
+            });
+        }
     } catch (error) {
         next(error);
     }
