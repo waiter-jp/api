@@ -22,7 +22,7 @@ import notFoundHandler from './middlewares/notFoundHandler';
 
 import devRouter from './routes/dev';
 import oauthRouter from './routes/oauth';
-import tokenRouter from './routes/token';
+import passportsRouter from './routes/passports';
 
 const debug = createDebug('waiter-prototype:*');
 
@@ -77,7 +77,7 @@ app.use('/oauth', oauthRouter);
 // todo oauth認証を導入する
 app.use(authentication);
 
-app.use('/token', tokenRouter);
+app.use('/passports', passportsRouter);
 
 if (process.env.NODE_ENV !== 'production') {
     app.use('/dev', devRouter);

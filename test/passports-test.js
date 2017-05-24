@@ -20,55 +20,64 @@ const supertest = require("supertest");
 const app = require("../app/app");
 describe('mongodbでトークン発行', () => {
     it('ok', () => __awaiter(this, void 0, void 0, function* () {
+        const scope = 'payment';
         yield supertest(app)
-            .post('/token?db=mongodb')
+            .post('/passports?db=mongodb')
             .set('authorization', `Bearer ${process.env.TEST_ACCESS_TOKEN}`)
             .set('Accept', 'application/json')
+            .send({
+            scope: scope
+        })
             .expect('Content-Type', /json/)
             .expect(httpStatus.OK)
             .then((response) => {
             assert(typeof response.body.token === 'string');
             assert(typeof response.body.expires_in === 'number');
             const decoded = jwt.verify(response.body.token, process.env.WAITER_SECRET);
-            assert(typeof decoded.scope === 'string');
-            assert(typeof decoded.key === 'string');
-            assert(typeof decoded.count === 'number');
+            assert.equal(typeof decoded.client_id, 'string');
+            assert.equal(decoded.scope, scope);
         });
     }));
 });
 describe('redis cacheでトークン発行', () => {
     it('ok', () => __awaiter(this, void 0, void 0, function* () {
+        const scope = 'payment';
         yield supertest(app)
-            .post('/token?db=redis')
+            .post('/passports?db=redis')
             .set('authorization', `Bearer ${process.env.TEST_ACCESS_TOKEN}`)
             .set('Accept', 'application/json')
+            .send({
+            scope: scope
+        })
             .expect('Content-Type', /json/)
             .expect(httpStatus.OK)
             .then((response) => {
             assert(typeof response.body.token === 'string');
             assert(typeof response.body.expires_in === 'number');
             const decoded = jwt.verify(response.body.token, process.env.WAITER_SECRET);
-            assert(typeof decoded.scope === 'string');
-            assert(typeof decoded.key === 'string');
-            assert(typeof decoded.count === 'number');
+            assert.equal(typeof decoded.client_id, 'string');
+            assert.equal(decoded.scope, scope);
         });
     }));
 });
 describe('sqlserverでトークン発行', () => {
     it('ok', () => __awaiter(this, void 0, void 0, function* () {
+        const scope = 'payment';
         yield supertest(app)
-            .post('/token?db=sqlserver')
+            .post('/passports?db=sqlserver')
             .set('authorization', `Bearer ${process.env.TEST_ACCESS_TOKEN}`)
             .set('Accept', 'application/json')
+            .send({
+            scope: scope
+        })
             .expect('Content-Type', /json/)
             .expect(httpStatus.OK)
             .then((response) => {
             assert(typeof response.body.token === 'string');
             assert(typeof response.body.expires_in === 'number');
             const decoded = jwt.verify(response.body.token, process.env.WAITER_SECRET);
-            assert(typeof decoded.scope === 'string');
-            assert(typeof decoded.key === 'string');
-            assert(typeof decoded.count === 'number');
+            assert.equal(typeof decoded.client_id, 'string');
+            assert.equal(decoded.scope, scope);
         });
     }));
 });

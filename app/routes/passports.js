@@ -1,6 +1,6 @@
 "use strict";
 /**
- * tokenルーター
+ * 許可証ルーター
  *
  * @ignore
  */
@@ -13,30 +13,49 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const createDebug = require("debug");
 const express_1 = require("express");
-const tokenController = require("../controllers/token");
+const httpStatus = require("http-status");
+const passportsController = require("../controllers/passports");
 const validator_1 = require("../middlewares/validator");
-const tokenRouter = express_1.Router();
-tokenRouter.post('', (__1, __2, next) => {
+const debug = createDebug('waiter-prototype:router:passports');
+const passportsRouter = express_1.Router();
+passportsRouter.post('', (req, __, next) => {
+    // クライアントが何の許可証かを制御するためのスコープ
+    req.checkBody('scope', 'invalid scope').notEmpty().withMessage('scope is required');
     next();
 }, validator_1.default, (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
+        let passport;
         switch (req.query.db) {
             case 'mongodb':
-                yield tokenController.publishWithMongo(req, res, next);
+                passport = yield passportsController.publishWithMongo(req);
                 break;
             case 'redis':
-                yield tokenController.publishWithRedis(req, res, next);
+                passport = yield passportsController.publishWithRedis(req);
                 break;
             case 'sqlserver':
-                yield tokenController.publishWithSQLServer(req, res, next);
+                passport = yield passportsController.publishWithSQLServer(req);
                 break;
             default:
                 throw new Error('db not implemented');
+        }
+        debug('passport:', passport);
+        if (passport === null) {
+            res.status(httpStatus.NOT_FOUND).json({
+                data: null
+            });
+        }
+        else {
+            const token = yield passportsController.createToken(passport);
+            res.json({
+                token: token,
+                expires_in: Number(process.env.WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS)
+            });
         }
     }
     catch (error) {
         next(error);
     }
 }));
-exports.default = tokenRouter;
+exports.default = passportsRouter;
