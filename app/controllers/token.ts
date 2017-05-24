@@ -88,6 +88,7 @@ export async function publishWithRedis(__: Request, res: Response, next: NextFun
             .exec(async (execErr, replies) => {
                 if (execErr instanceof Error) {
                     next(execErr);
+
                     return;
                 }
                 debug('replies:', replies);
@@ -172,6 +173,7 @@ SELECT count FROM counters WHERE unit = '${key}';
  */
 function createKey(scope: string) {
     const dateNow = moment();
+
     return scope + (dateNow.unix() - dateNow.unix() % sequenceCountUnitPerSeconds).toString();
 }
 

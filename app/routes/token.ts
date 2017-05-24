@@ -9,9 +9,9 @@ import { Router } from 'express';
 import * as tokenController from '../controllers/token';
 import validator from '../middlewares/validator';
 
-const router = Router();
+const tokenRouter = Router();
 
-router.all(
+tokenRouter.all(
     '/mongodb',
     (__1, __2, next) => {
         next();
@@ -20,7 +20,7 @@ router.all(
     tokenController.publishWithMongo
 );
 
-router.all(
+tokenRouter.all(
     '/redis',
     (__1, __2, next) => {
         next();
@@ -29,7 +29,7 @@ router.all(
     tokenController.publishWithRedis
 );
 
-router.all(
+tokenRouter.all(
     '/sqlserver',
     (__1, __2, next) => {
         next();
@@ -38,4 +38,4 @@ router.all(
     tokenController.publishWithSQLServer
 );
 
-export default router;
+export default tokenRouter;
