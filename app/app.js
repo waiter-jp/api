@@ -12,11 +12,13 @@ const expressValidator = require("express-validator"); // tslint:disable-line:no
 const helmet = require("helmet");
 const mongoose = require("mongoose");
 const mongooseConnectionOptions_1 = require("../mongooseConnectionOptions");
+const authentication_1 = require("./middlewares/authentication");
 const basicAuth_1 = require("./middlewares/basicAuth");
 const benchmarks_1 = require("./middlewares/benchmarks");
 const errorHandler_1 = require("./middlewares/errorHandler");
 const notFoundHandler_1 = require("./middlewares/notFoundHandler");
 const dev_1 = require("./routes/dev");
+const oauth_1 = require("./routes/oauth");
 const token_1 = require("./routes/token");
 const debug = createDebug('waiter-prototype:*');
 const app = express();
@@ -58,6 +60,9 @@ app.use(expressValidator({})); // this line must be immediately after any of the
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
 // routers
+app.use('/oauth', oauth_1.default);
+// todo oauth認証を導入する
+app.use(authentication_1.default);
 app.use('/token', token_1.default);
 if (process.env.NODE_ENV !== 'production') {
     app.use('/dev', dev_1.default);

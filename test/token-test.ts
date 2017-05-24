@@ -15,6 +15,7 @@ describe('mongodbでトークン発行', () => {
     it('ok', async () => {
         await supertest(app)
             .post('/token?db=mongodb')
+            .set('authorization', `Bearer ${process.env.TEST_ACCESS_TOKEN}`)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(httpStatus.OK)
@@ -34,6 +35,7 @@ describe('redis cacheでトークン発行', () => {
     it('ok', async () => {
         await supertest(app)
             .post('/token?db=redis')
+            .set('authorization', `Bearer ${process.env.TEST_ACCESS_TOKEN}`)
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(httpStatus.OK)

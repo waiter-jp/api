@@ -14,12 +14,14 @@ import * as mongoose from 'mongoose';
 
 import mongooseConnectionOptions from '../mongooseConnectionOptions';
 
+import authentication from './middlewares/authentication';
 import basicAuth from './middlewares/basicAuth';
 import benchmarks from './middlewares/benchmarks';
 import errorHandler from './middlewares/errorHandler';
 import notFoundHandler from './middlewares/notFoundHandler';
 
 import devRouter from './routes/dev';
+import oauthRouter from './routes/oauth';
 import tokenRouter from './routes/token';
 
 const debug = createDebug('waiter-prototype:*');
@@ -70,6 +72,11 @@ app.use(expressValidator({})); // this line must be immediately after any of the
 mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions);
 
 // routers
+app.use('/oauth', oauthRouter);
+
+// todo oauth認証を導入する
+app.use(authentication);
+
 app.use('/token', tokenRouter);
 
 if (process.env.NODE_ENV !== 'production') {
