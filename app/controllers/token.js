@@ -17,30 +17,11 @@ const createDebug = require("debug");
 const httpStatus = require("http-status");
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
-const redis = require("redis");
 const tedious = require("tedious");
+const redisClient_1 = require("../db/redisClient");
+const sqlServerConnection_1 = require("../db/sqlServerConnection");
 const counter_1 = require("../models/mongoose/counter");
 const debug = createDebug('waiter-prototype:controller:token');
-const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST, {
-    password: process.env.REDIS_KEY,
-    tls: { servername: process.env.REDIS_HOST },
-    return_buffers: false
-});
-const connection = new tedious.Connection({
-    userName: process.env.SQL_SERVER_USERNAME,
-    password: process.env.SQL_SERVER_PASSWORD,
-    server: process.env.SQL_SERVER_SERVER,
-    // If you're on Windows Azure, you will need this:
-    options: {
-        database: process.env.SQL_SERVER_DATABASE,
-        encrypt: true
-    }
-});
-connection.on('connect', (connectErr) => {
-    if (connectErr instanceof Error) {
-        console.error(connectErr);
-    }
-});
 const WAITER_SCOPE = 'waiter';
 const sequenceCountUnitPerSeconds = Number(process.env.WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS);
 const numberOfTokensPerUnit = Number(process.env.WAITER_NUMBER_OF_TOKENS_PER_UNIT);
@@ -77,7 +58,7 @@ function publishWithRedis(__, res, next) {
         try {
             const key = createKey(WAITER_SCOPE);
             const ttl = sequenceCountUnitPerSeconds;
-            const multi = redisClient.multi();
+            const multi = redisClient_1.default.multi();
             multi
                 .incr(key, debug)
                 .expire(key, ttl, debug)
@@ -158,7 +139,7 @@ SELECT count FROM counters WHERE unit = '${key}';
                 debug('count:', columns[0].value);
                 nextCount = columns[0].value;
             });
-            connection.execSql(request);
+            sqlServerConnection_1.default.execSql(request);
         }
         catch (error) {
             next(error);

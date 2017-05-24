@@ -9,39 +9,14 @@ import { NextFunction, Request, Response } from 'express';
 import * as httpStatus from 'http-status';
 import * as jwt from 'jsonwebtoken';
 import * as moment from 'moment';
-import * as redis from 'redis';
 import * as tedious from 'tedious';
+
+import redisClient from '../db/redisClient';
+import sqlServerConnection from '../db/sqlServerConnection';
 
 import Counter from '../models/mongoose/counter';
 
 const debug = createDebug('waiter-prototype:controller:token');
-const redisClient = redis.createClient(
-    process.env.REDIS_PORT,
-    process.env.REDIS_HOST,
-    {
-        password: process.env.REDIS_KEY,
-        tls: { servername: process.env.REDIS_HOST },
-        return_buffers: false
-    }
-);
-
-const connection = new tedious.Connection({
-    userName: process.env.SQL_SERVER_USERNAME,
-    password: process.env.SQL_SERVER_PASSWORD,
-    server: process.env.SQL_SERVER_SERVER,
-
-    // If you're on Windows Azure, you will need this:
-    options: {
-        database: process.env.SQL_SERVER_DATABASE,
-        encrypt: true
-    }
-});
-
-connection.on('connect', (connectErr: any) => {
-    if (connectErr instanceof Error) {
-        console.error(connectErr);
-    }
-});
 
 const WAITER_SCOPE = 'waiter';
 const sequenceCountUnitPerSeconds = Number(process.env.WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS);
@@ -159,7 +134,7 @@ SELECT count FROM counters WHERE unit = '${key}';
             nextCount = columns[0].value;
         });
 
-        connection.execSql(request);
+        sqlServerConnection.execSql(request);
     } catch (error) {
         next(error);
     }

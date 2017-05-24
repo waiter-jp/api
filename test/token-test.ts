@@ -11,10 +11,10 @@ import * as supertest from 'supertest';
 
 import * as app from '../app/app';
 
-describe('POST /token/mongodb', () => {
+describe('mongodbでトークン発行', () => {
     it('ok', async () => {
         await supertest(app)
-            .post('/token/mongodb')
+            .post('/token?db=mongodb')
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(httpStatus.OK)
@@ -30,10 +30,10 @@ describe('POST /token/mongodb', () => {
     });
 });
 
-describe('POST /token/redis', () => {
+describe('redis cacheでトークン発行', () => {
     it('ok', async () => {
         await supertest(app)
-            .post('/token/redis')
+            .post('/token?db=redis')
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(httpStatus.OK)

@@ -11,31 +11,34 @@ import validator from '../middlewares/validator';
 
 const tokenRouter = Router();
 
-tokenRouter.all(
-    '/mongodb',
+tokenRouter.post(
+    '',
     (__1, __2, next) => {
         next();
     },
     validator,
-    tokenController.publishWithMongo
-);
+    async (req, res, next) => {
+        try {
+            switch (req.query.db) {
+                case 'mongodb':
+                    await tokenController.publishWithMongo(req, res, next);
+                    break;
 
-tokenRouter.all(
-    '/redis',
-    (__1, __2, next) => {
-        next();
-    },
-    validator,
-    tokenController.publishWithRedis
-);
+                case 'redis':
+                    await tokenController.publishWithRedis(req, res, next);
+                    break;
 
-tokenRouter.all(
-    '/sqlserver',
-    (__1, __2, next) => {
-        next();
-    },
-    validator,
-    tokenController.publishWithSQLServer
+                case 'sqlserver':
+                    await tokenController.publishWithSQLServer(req, res, next);
+                    break;
+
+                default:
+                    throw new Error('db not implemented');
+            }
+        } catch (error) {
+            next(error);
+        }
+    }
 );
 
 export default tokenRouter;
