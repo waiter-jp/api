@@ -18,8 +18,6 @@ const httpStatus = require("http-status");
 const jwt = require("jsonwebtoken");
 const supertest = require("supertest");
 const app = require("../app/app");
-before(() => __awaiter(this, void 0, void 0, function* () {
-}));
 describe('POST /token/mongodb', () => {
     it('ok', () => __awaiter(this, void 0, void 0, function* () {
         yield supertest(app)
@@ -54,3 +52,20 @@ describe('POST /token/redis', () => {
         });
     }));
 });
+// describe('POST /token/sqlserver', () => {
+//     it('ok', async () => {
+//         await supertest(app)
+//             .post('/token/sqlserver')
+//             .set('Accept', 'application/json')
+//             .expect('Content-Type', /json/)
+//             .expect(httpStatus.OK)
+//             .then((response) => {
+//                 assert(typeof response.body.token === 'string');
+//                 assert(typeof response.body.expires_in === 'number');
+//                 const decoded = jwt.verify(<string>response.body.token, <string>process.env.WAITER_SECRET);
+//                 assert(typeof decoded.scope === 'string');
+//                 assert(typeof decoded.key === 'string');
+//                 assert(typeof decoded.count === 'number');
+//             });
+//     });
+// });
