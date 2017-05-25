@@ -15,7 +15,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("assert");
 const httpStatus = require("http-status");
-const jwt = require("jsonwebtoken");
 const supertest = require("supertest");
 const app = require("../app/app");
 describe('mongodbでトークン発行', () => {
@@ -32,10 +31,7 @@ describe('mongodbでトークン発行', () => {
             .expect(httpStatus.OK)
             .then((response) => {
             assert(typeof response.body.token === 'string');
-            assert(typeof response.body.expires_in === 'number');
-            const decoded = jwt.verify(response.body.token, process.env.WAITER_SECRET);
-            assert.equal(typeof decoded.client_id, 'string');
-            assert.equal(decoded.scope, scope);
+            // assert(typeof response.body.expires_in === 'number');
         });
     }));
 });
@@ -53,10 +49,7 @@ describe('redis cacheでトークン発行', () => {
             .expect(httpStatus.OK)
             .then((response) => {
             assert(typeof response.body.token === 'string');
-            assert(typeof response.body.expires_in === 'number');
-            const decoded = jwt.verify(response.body.token, process.env.WAITER_SECRET);
-            assert.equal(typeof decoded.client_id, 'string');
-            assert.equal(decoded.scope, scope);
+            // assert(typeof response.body.expires_in === 'number');
         });
     }));
 });
@@ -74,10 +67,7 @@ describe('sqlserverでトークン発行', () => {
             .expect(httpStatus.OK)
             .then((response) => {
             assert(typeof response.body.token === 'string');
-            assert(typeof response.body.expires_in === 'number');
-            const decoded = jwt.verify(response.body.token, process.env.WAITER_SECRET);
-            assert.equal(typeof decoded.client_id, 'string');
-            assert.equal(decoded.scope, scope);
+            // assert(typeof response.body.expires_in === 'number');
         });
     }));
 });

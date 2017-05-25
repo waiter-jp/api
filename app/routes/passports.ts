@@ -4,11 +4,15 @@
  * @ignore
  */
 
+import * as WAITER from '@motionpicture/waiter-domain';
 import * as createDebug from 'debug';
 import { Router } from 'express';
 import * as httpStatus from 'http-status';
+import * as mongoose from 'mongoose';
 
-import * as passportsController from '../controllers/passports';
+import getSqlServerConnection from '../db/getSqlServerConnection';
+import redisClient from '../db/redisClient';
+
 import validator from '../middlewares/validator';
 
 const debug = createDebug('waiter-prototype:router:passports');
@@ -25,34 +29,46 @@ passportsRouter.post(
     validator,
     async (req, res, next) => {
         try {
-            let passport: passportsController.IPassport | null;
+            let token: string | null;
+
+            // todo クライアント情報をDBに問い合わせる
+            const client = {
+                id: req.user.client_id,
+                secret: 'motionpicture',
+                passport_issuer_work_shift_in_sesonds: 30,
+                total_number_of_passports_per_issuer: 30
+            };
+
             switch (req.query.db) {
                 case 'mongodb':
-                    passport = await passportsController.publishWithMongo(req);
+                    const mongodbAdapter = WAITER.adapter.mongoDB.requestCounter(mongoose.connection);
+                    token = await WAITER.service.passport.issueWithMongo(client, req.body.scope)(mongodbAdapter);
                     break;
 
                 case 'redis':
-                    passport = await passportsController.publishWithRedis(req);
+                    const redisAdapter = WAITER.adapter.redis.counter(redisClient);
+                    token = await WAITER.service.passport.issueWithRedis(client, req.body.scope)(redisAdapter);
                     break;
 
                 case 'sqlserver':
-                    passport = await passportsController.publishWithSQLServer(req);
+                    const sqlServerAdapter = WAITER.adapter.sqlServer.counter(await getSqlServerConnection());
+                    token = await WAITER.service.passport.issueWithSqlServer(client, req.body.scope)(sqlServerAdapter);
                     break;
 
                 default:
                     throw new Error('db not implemented');
             }
 
-            debug('passport:', passport);
-            if (passport === null) {
+            debug('token:', token);
+            if (token === null) {
                 res.status(httpStatus.NOT_FOUND).json({
                     data: null
                 });
             } else {
-                const token = await passportsController.createToken(passport);
                 res.json({
-                    token: token,
-                    expires_in: Number(process.env.WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS)
+                    token: token
+                    // todo ここでこの環境変数を使うのか？
+                    // expires_in: Number(process.env.WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS)
                 });
             }
 
