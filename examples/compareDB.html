@@ -8,20 +8,30 @@
 </head>
 
 <body>
-    <div id="chartContainer1" style="width: 100%; height: 450px;display: inline-block;"></div>
-    <br>
-    <div id="chartContainer2" style="width: 100%; height: 450px;display: inline-block;"></div>
+    <div id="chartContainer1" style="width: 48%; height: 500px;display: inline-block;"></div>
+    <div id="chartContainer2" style="width: 48%; height: 500px;display: inline-block;"></div>
+    <div id="chartContainer3" style="width: 100%; height: 400px;display: inline-block;"></div>
 
     <script>
         var time = new Date();
-        var endpoint = 'http://localhost:8081';
-        var accessToken;
+        var endpoint1 = 'https://waiter-prototype-development02.azurewebsites.net';
+        var endpoint2 = 'https://waiter-prototype-development03.azurewebsites.net';
+        var endpoint3 = 'https://waiter-prototype-development04.azurewebsites.net';
+
+        var accessToken1;
+        var accessToken2;
+        var accessToken3;
+
         var numberOfPassportsIssuedWithMongoDB = 0;
         var numberOfPassportsIssuedWithRedis = 0;
         var numberOfPassportsIssuedWithSqlServer = 0;
 
+        var responseTimeMongoDB = 0;
+        var responseTimeRedis = 0;
+        var responseTimeSqlServer = 0;
+
         $.ajax({
-            url: `${endpoint}/oauth/token`,
+            url: `${endpoint1}/oauth/token`,
             method: 'POST',
             data: {
                 grant_type: 'client_credentials',
@@ -29,160 +39,217 @@
                 scope: ['admin']
             }
         }).done(function (data) {
-            accessToken = data.access_token;
-            console.log('accessToken:', accessToken);
-        }).fail(function (jqXHR, textStatus) {
-            console.error(jqXHR, textStatus);
+            accessToken1 = data.access_token;
+
+            $.ajax({
+                url: `${endpoint2}/oauth/token`,
+                method: 'POST',
+                data: {
+                    grant_type: 'client_credentials',
+                    client_id: 'motionpicture',
+                    scope: ['admin']
+                }
+            }).done(function (data) {
+                accessToken2 = data.access_token;
+
+                $.ajax({
+                    url: `${endpoint3}/oauth/token`,
+                    method: 'POST',
+                    data: {
+                        grant_type: 'client_credentials',
+                        client_id: 'motionpicture',
+                        scope: ['admin']
+                    }
+                }).done(function (data) {
+                    accessToken3 = data.access_token;
+
+                    startCharts();
+                });
+            });
         });
 
-        // チャート初期化
-        var chart1 = new CanvasJS.Chart("chartContainer1",
-            {
-                title: {
-                    text: "WAITER number of passorts issued"
-                },
-                data: [
-                    {
-                        type: "spline",
-                        name: "MongoDB",
-                        showInLegend: true,
-                        dataPoints: [
-                            { x: time, y: 0 }
-                        ]
+        function startCharts() {
+            // チャート初期化
+            var chart1 = new CanvasJS.Chart("chartContainer1",
+                {
+                    title: {
+                        text: "WAITER number of passports issued"
                     },
-                    {
-                        type: "spline",
-                        name: "Redis",
-                        showInLegend: true,
-                        dataPoints: [
-                            { x: time, y: 0 }
-                        ]
+                    data: [
+                        {
+                            type: "spline",
+                            name: "MongoDB",
+                            showInLegend: true,
+                            dataPoints: [
+                                { x: time, y: 0 }
+                            ]
+                        },
+                        {
+                            type: "spline",
+                            name: "Redis",
+                            showInLegend: true,
+                            dataPoints: [
+                                { x: time, y: 0 }
+                            ]
+                        },
+                        {
+                            type: "spline",
+                            name: "SQL Server",
+                            showInLegend: true,
+                            dataPoints: [
+                                { x: time, y: 0 }
+                            ]
+                        }
+                    ]
+                });
+            var chart2 = new CanvasJS.Chart("chartContainer2",
+                {
+                    title: {
+                        text: "WAITER number of passports issued2"
                     },
-                    {
-                        type: "spline",
-                        name: "SQL Server",
-                        showInLegend: true,
-                        dataPoints: [
-                            { x: time, y: 0 }
-                        ]
-                    }
-                ]
-            });
-        var chart2 = new CanvasJS.Chart("chartContainer2",
-            {
-                title: {
-                    text: "WAITER number of passorts issued2"
-                },
-                data: [
-                    {
-                        type: "spline",
-                        name: "MongoDB",
-                        showInLegend: true,
-                        dataPoints: [
-                            { x: time, y: 0 }
-                        ]
-                    },
-                    {
-                        type: "spline",
-                        name: "Redis",
-                        showInLegend: true,
-                        dataPoints: [
-                            { x: time, y: 0 }
-                        ]
-                    },
-                    {
-                        type: "spline",
-                        name: "SQL Server",
-                        showInLegend: true,
-                        dataPoints: [
-                            { x: time, y: 0 }
-                        ]
-                    }
-                ]
-            });
+                    data: [
+                        {
+                            type: "spline",
+                            name: "MongoDB",
+                            showInLegend: true,
+                            dataPoints: [
+                                { x: time, y: 0 }
+                            ]
+                        },
+                        {
+                            type: "spline",
+                            name: "Redis",
+                            showInLegend: true,
+                            dataPoints: [
+                                { x: time, y: 0 }
+                            ]
+                        },
+                        {
+                            type: "spline",
+                            name: "SQL Server",
+                            showInLegend: true,
+                            dataPoints: [
+                                { x: time, y: 0 }
+                            ]
+                        }
+                    ]
+                });
 
-
-        chart1.render();
-        chart2.render();
-
-
-        // チャートにデータを追加し続ける
-        setInterval(function () {
-            var time = new Date();
-            // 時点での発行数データを追加
-            chart1.options.data[0].dataPoints.push({ x: time, y: numberOfPassportsIssuedWithMongoDB });
-            chart1.options.data[1].dataPoints.push({ x: time, y: numberOfPassportsIssuedWithRedis });
-            chart1.options.data[2].dataPoints.push({ x: time, y: numberOfPassportsIssuedWithSqlServer });
-            chart1.options.data[0].dataPoints = chart1.options.data[0].dataPoints.slice(-30);
-            chart1.options.data[1].dataPoints = chart1.options.data[1].dataPoints.slice(-30);
-            chart1.options.data[2].dataPoints = chart1.options.data[2].dataPoints.slice(-30);
-
-            chart2.options.data[0].dataPoints.push({ x: time, y: numberOfPassportsIssuedWithMongoDB });
-            chart2.options.data[1].dataPoints.push({ x: time, y: numberOfPassportsIssuedWithRedis });
-            chart2.options.data[2].dataPoints.push({ x: time, y: numberOfPassportsIssuedWithSqlServer });
 
             chart1.render();
             chart2.render();
-        }, 500);
 
-        // 許可証を発行し続ける
-        setInterval(function () {
-            $.ajax({
-                url: `${endpoint}/passports?db=mongodb`,
-                method: 'POST',
-                data: {
-                    scope: 'testscope'
-                },
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader('Authorization', `Bearer ${accessToken}`);
-                }
-            }).done(function (data) {
-                if (data.token) {
-                    numberOfPassportsIssuedWithMongoDB += 1;
-                    console.log('numberOfPassportsIssuedWithMongoDB:', numberOfPassportsIssuedWithMongoDB);
-                }
-            }).fail(function (jqXHR, textStatus) {
-                console.error(jqXHR, textStatus);
-            });
-        }, 250);
-        setInterval(function () {
-            $.ajax({
-                url: `${endpoint}/passports?db=redis`,
-                method: 'POST',
-                data: {
-                    scope: 'testscope'
-                },
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader('Authorization', `Bearer ${accessToken}`);
-                }
-            }).done(function (data) {
-                if (data.token) {
-                    numberOfPassportsIssuedWithRedis += 1;
-                    console.log('numberOfPassportsIssuedWithRedis:', numberOfPassportsIssuedWithRedis);
-                }
-            }).fail(function (jqXHR, textStatus) {
-                console.error(jqXHR, textStatus);
-            });
-        }, 250);
-        setInterval(function () {
-            $.ajax({
-                url: `${endpoint}/passports?db=sqlserver`,
-                method: 'POST',
-                data: {
-                    scope: 'testscope'
-                },
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader('Authorization', `Bearer ${accessToken}`);
-                }
-            }).done(function (data) {
-                if (data.token) {
-                    numberOfPassportsIssuedWithSqlServer += 1;
-                    console.log('numberOfPassportsIssuedWithSqlServer:', numberOfPassportsIssuedWithSqlServer);
-                }
-            }).fail(function (jqXHR, textStatus) {
-                console.error(jqXHR, textStatus);
-            });
-        }, 250);
+            setInterval(function () {
+                var chart3 = new CanvasJS.Chart("chartContainer3", {
+                    axisY: {
+                        minimum: 0,
+                        // maximum: 300
+                    },
+                    data: [{
+                        // type: 'column',
+                        type: "bar",
+
+                        // グラフに描画するデータを設定する
+                        dataPoints: [
+                            { label: "MongoDB", y: responseTimeMongoDB },
+                            { label: "Redis", y: responseTimeRedis },
+                            { label: "SQL Server", y: responseTimeSqlServer }
+                        ]
+                    }]
+                });
+                chart3.render();
+            }, 500);
+
+            // チャートにデータを追加し続ける
+            setInterval(function () {
+                var time = new Date();
+                // 時点での発行数データを追加
+                chart1.options.data[0].dataPoints.push({ x: time, y: numberOfPassportsIssuedWithMongoDB });
+                chart1.options.data[1].dataPoints.push({ x: time, y: numberOfPassportsIssuedWithRedis });
+                chart1.options.data[2].dataPoints.push({ x: time, y: numberOfPassportsIssuedWithSqlServer });
+                chart1.options.data[0].dataPoints = chart1.options.data[0].dataPoints.slice(-30);
+                chart1.options.data[1].dataPoints = chart1.options.data[1].dataPoints.slice(-30);
+                chart1.options.data[2].dataPoints = chart1.options.data[2].dataPoints.slice(-30);
+
+                chart2.options.data[0].dataPoints.push({ x: time, y: numberOfPassportsIssuedWithMongoDB });
+                chart2.options.data[1].dataPoints.push({ x: time, y: numberOfPassportsIssuedWithRedis });
+                chart2.options.data[2].dataPoints.push({ x: time, y: numberOfPassportsIssuedWithSqlServer });
+
+                chart1.render();
+                chart2.render();
+            }, 500);
+
+            // 許可証を発行し続ける
+            const intervalOfIssuingPassport = 250;
+            setInterval(function () {
+                var start = new Date();
+                $.ajax({
+                    url: `${endpoint1}/passports?db=mongodb`,
+                    method: 'POST',
+                    data: {
+                        scope: 'testscope'
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader('Authorization', `Bearer ${accessToken1}`);
+                    }
+                }).done(function (data) {
+                    if (data.token) {
+                        numberOfPassportsIssuedWithMongoDB += 1;
+                        console.log('numberOfPassportsIssuedWithMongoDB:', numberOfPassportsIssuedWithMongoDB);
+                    }
+                }).fail(function (jqXHR, textStatus) {
+                    console.error(jqXHR, textStatus);
+                }).always(function () {
+                    responseTimeMongoDB = new Date() - start;
+                });
+            }, intervalOfIssuingPassport);
+
+            setInterval(function () {
+                var start = new Date();
+                $.ajax({
+                    url: `${endpoint2}/passports?db=redis`,
+                    method: 'POST',
+                    data: {
+                        scope: 'testscope'
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader('Authorization', `Bearer ${accessToken2}`);
+                    }
+                }).done(function (data) {
+                    if (data.token) {
+                        numberOfPassportsIssuedWithRedis += 1;
+                        console.log('numberOfPassportsIssuedWithRedis:', numberOfPassportsIssuedWithRedis);
+                    }
+                }).fail(function (jqXHR, textStatus) {
+                    console.error(jqXHR, textStatus);
+                }).always(function () {
+                    responseTimeRedis = new Date() - start;
+                });
+            }, intervalOfIssuingPassport);
+
+            setInterval(function () {
+                var start = new Date();
+                $.ajax({
+                    url: `${endpoint3}/passports?db=sqlserver`,
+                    method: 'POST',
+                    data: {
+                        scope: 'testscope'
+                    },
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader('Authorization', `Bearer ${accessToken3}`);
+                    }
+                }).done(function (data) {
+                    if (data.token) {
+                        numberOfPassportsIssuedWithSqlServer += 1;
+                        console.log('numberOfPassportsIssuedWithSqlServer:', numberOfPassportsIssuedWithSqlServer);
+                    }
+                }).fail(function (jqXHR, textStatus) {
+                    console.error(jqXHR, textStatus);
+                }).always(function () {
+                    responseTimeSqlServer = new Date() - start;
+                });
+            }, intervalOfIssuingPassport);
+        }
     </script>
 </body>
 
