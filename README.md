@@ -55,7 +55,9 @@ npm start
 ```shell
 set NODE_ENV=**********環境名**********
 set MONGOLAB_URI=**********MongoDB接続文字列**********
-set REDIS_URL=**********Redis Cache接続文字列**********
+set REDIS_HOST=**********Redis Cache接続ホスト**********
+set REDIS_PORT=**********Redis Cache接続ポート**********
+set REDIS_KEY=**********Redis Cache接続キー**********
 set SQL_SERVER_USERNAME=**********SQL Serverユーザーネーム**********
 set SQL_SERVER_PASSWORD=**********SQL Serverパスワード**********
 set SQL_SERVER_SERVER=**********SQL Serverサーバー**********
