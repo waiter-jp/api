@@ -4,13 +4,13 @@
  * @module
  */
 
-import * as mssql from 'mssql';
+import * as WAITER from '@motionpicture/waiter-domain';
 
-let pool: mssql.ConnectionPool;
+let pool: WAITER.mssql.ConnectionPool;
 
 export default async () => {
     if (pool === undefined) {
-        pool = await (new mssql.ConnectionPool({
+        pool = await (new WAITER.mssql.ConnectionPool({
             user: process.env.SQL_SERVER_USERNAME,
             password: process.env.SQL_SERVER_PASSWORD,
             server: process.env.SQL_SERVER_SERVER,

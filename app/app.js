@@ -4,13 +4,13 @@
  *
  * @module
  */
+const WAITER = require("@motionpicture/waiter-domain");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const createDebug = require("debug");
 const express = require("express");
 const expressValidator = require("express-validator"); // tslint:disable-line:no-require-imports
 const helmet = require("helmet");
-const mongoose = require("mongoose");
 const mongooseConnectionOptions_1 = require("../mongooseConnectionOptions");
 const authentication_1 = require("./middlewares/authentication");
 const basicAuth_1 = require("./middlewares/basicAuth");
@@ -56,9 +56,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator({})); // this line must be immediately after any of the bodyParser middlewares!
 // 静的ファイル
 // app.use(express.static(__dirname + '/../../public'));
-// Use native promises
-mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
+WAITER.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default);
 // routers
 app.use('/oauth', oauth_1.default);
 // todo oauth認証を導入する

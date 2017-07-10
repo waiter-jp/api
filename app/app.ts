@@ -4,13 +4,13 @@
  * @module
  */
 
+import * as WAITER from '@motionpicture/waiter-domain';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import * as createDebug from 'debug';
 import * as express from 'express';
 import expressValidator = require('express-validator'); // tslint:disable-line:no-require-imports
 import * as helmet from 'helmet';
-import * as mongoose from 'mongoose';
 
 import mongooseConnectionOptions from '../mongooseConnectionOptions';
 
@@ -67,9 +67,7 @@ app.use(expressValidator({})); // this line must be immediately after any of the
 // 静的ファイル
 // app.use(express.static(__dirname + '/../../public'));
 
-// Use native promises
-(<any>mongoose).Promise = global.Promise;
-mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions);
+WAITER.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions);
 
 // routers
 app.use('/oauth', oauthRouter);

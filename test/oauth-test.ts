@@ -46,7 +46,7 @@ describe('oauthルーターテスト アクセストークン発行', () => {
                 assert.equal(typeof response.body.expires_in, 'number');
 
                 // トークンを検証したら、中身が想定通りのはず
-                const decoded = jwt.verify(<string>response.body.access_token, <string>process.env.WAITER_SECRET);
+                const decoded = <any>jwt.verify(<string>response.body.access_token, <string>process.env.WAITER_SECRET);
                 assert.deepEqual(decoded.scope, scope);
                 assert.equal(decoded.client_id, clientId);
             });

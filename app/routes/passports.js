@@ -17,9 +17,8 @@ const WAITER = require("@motionpicture/waiter-domain");
 const createDebug = require("debug");
 const express_1 = require("express");
 const httpStatus = require("http-status");
-const mongoose = require("mongoose");
-const getSqlServerConnection_1 = require("../db/getSqlServerConnection");
-const redisClient_1 = require("../db/redisClient");
+const getSqlServerConnection_1 = require("../../getSqlServerConnection");
+const redis = require("../../redis");
 const validator_1 = require("../middlewares/validator");
 const debug = createDebug('waiter-prototype:router:passports');
 const passportsRouter = express_1.Router();
@@ -39,11 +38,11 @@ passportsRouter.post('', (req, __, next) => {
         };
         switch (req.query.db) {
             case 'mongodb':
-                const mongodbAdapter = WAITER.adapter.mongoDB.requestCounter(mongoose.connection);
+                const mongodbAdapter = WAITER.adapter.mongoDB.requestCounter(WAITER.mongoose.connection);
                 token = yield WAITER.service.passport.issueWithMongo(client, req.body.scope)(mongodbAdapter);
                 break;
             case 'redis':
-                const redisAdapter = WAITER.adapter.redis.counter(redisClient_1.default);
+                const redisAdapter = WAITER.adapter.redis.counter(redis.getClient());
                 token = yield WAITER.service.passport.issueWithRedis(client, req.body.scope)(redisAdapter);
                 break;
             case 'sqlserver':

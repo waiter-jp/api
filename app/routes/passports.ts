@@ -8,10 +8,9 @@ import * as WAITER from '@motionpicture/waiter-domain';
 import * as createDebug from 'debug';
 import { Router } from 'express';
 import * as httpStatus from 'http-status';
-import * as mongoose from 'mongoose';
 
-import getSqlServerConnection from '../db/getSqlServerConnection';
-import redisClient from '../db/redisClient';
+import getSqlServerConnection from '../../getSqlServerConnection';
+import * as redis from '../../redis';
 
 import validator from '../middlewares/validator';
 
@@ -41,12 +40,12 @@ passportsRouter.post(
 
             switch (req.query.db) {
                 case 'mongodb':
-                    const mongodbAdapter = WAITER.adapter.mongoDB.requestCounter(mongoose.connection);
+                    const mongodbAdapter = WAITER.adapter.mongoDB.requestCounter(WAITER.mongoose.connection);
                     token = await WAITER.service.passport.issueWithMongo(client, req.body.scope)(mongodbAdapter);
                     break;
 
                 case 'redis':
-                    const redisAdapter = WAITER.adapter.redis.counter(redisClient);
+                    const redisAdapter = WAITER.adapter.redis.counter(redis.getClient());
                     token = await WAITER.service.passport.issueWithRedis(client, req.body.scope)(redisAdapter);
                     break;
 

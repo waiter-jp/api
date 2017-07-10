@@ -13,11 +13,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mssql = require("mssql");
+const WAITER = require("@motionpicture/waiter-domain");
 let pool;
 exports.default = () => __awaiter(this, void 0, void 0, function* () {
     if (pool === undefined) {
-        pool = yield (new mssql.ConnectionPool({
+        pool = yield (new WAITER.mssql.ConnectionPool({
             user: process.env.SQL_SERVER_USERNAME,
             password: process.env.SQL_SERVER_PASSWORD,
             server: process.env.SQL_SERVER_SERVER,

@@ -7,9 +7,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 const express = require("express");
 const devRouter = express.Router();
+const WAITER = require("@motionpicture/waiter-domain");
 const createDebug = require("debug");
 const http_status_1 = require("http-status");
-const mongoose = require("mongoose");
 const mongooseConnectionOptions_1 = require("../../mongooseConnectionOptions");
 const debug = createDebug('waiter-prototype:*');
 devRouter.get('/500', () => {
@@ -26,7 +26,7 @@ devRouter.get('/environmentVariables', (req, res) => {
 });
 devRouter.get('/mongoose/connect', (req, res, next) => {
     debug('ip:', req.ip);
-    mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default, (err) => {
+    WAITER.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions_1.default, (err) => {
         if (err instanceof Error) {
             next(err);
             return;
@@ -36,7 +36,7 @@ devRouter.get('/mongoose/connect', (req, res, next) => {
 });
 devRouter.get('/mongoose/disconnect', (req, res, next) => {
     debug('ip:', req.ip);
-    mongoose.disconnect((err) => {
+    WAITER.mongoose.disconnect((err) => {
         if (err instanceof Error) {
             next(err);
             return;
