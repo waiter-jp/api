@@ -9,7 +9,7 @@
     }
   ],
   "dependencies": {
-    "@motionpicture/waiter-domain": "git+https://tetsu:M0P!Xmopix@m-p.backlog.jp/git/WAITER/domain.git#feature/WAITER-3",
+    "@motionpicture/waiter-domain": "^1.0.0",
     "basic-auth": "^1.1.0",
     "body-parser": "^1.17.2",
     "cors": "^2.8.3",
