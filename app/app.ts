@@ -4,7 +4,7 @@
  * @module
  */
 
-import * as WAITER from '@motionpicture/waiter-domain';
+// import * as WAITER from '@motionpicture/waiter-domain';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import * as createDebug from 'debug';
@@ -12,7 +12,7 @@ import * as express from 'express';
 import expressValidator = require('express-validator'); // tslint:disable-line:no-require-imports
 import * as helmet from 'helmet';
 
-import mongooseConnectionOptions from '../mongooseConnectionOptions';
+// import mongooseConnectionOptions from '../mongooseConnectionOptions';
 
 import authentication from './middlewares/authentication';
 import basicAuth from './middlewares/basicAuth';
@@ -67,7 +67,7 @@ app.use(expressValidator({})); // this line must be immediately after any of the
 // 静的ファイル
 // app.use(express.static(__dirname + '/../../public'));
 
-WAITER.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions);
+//WAITER.mongoose.connect(process.env.MONGOLAB_URI, mongooseConnectionOptions);
 
 // routers
 app.use('/oauth', oauthRouter);
