@@ -33,7 +33,7 @@ passportsRouter.post(
             // todo クライアント情報をDBに問い合わせる
             const client = {
                 id: req.user.client_id,
-                secret: process.env.WAITER_NUMBER_OF_TOKENS_PER_UNIT.WAITER_SECRET,
+                secret: process.env.WAITER_SECRET,
                 passport_issuer_work_shift_in_sesonds: process.env.WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS,
                 total_number_of_passports_per_issuer: process.env.WAITER_NUMBER_OF_TOKENS_PER_UNIT
             };
