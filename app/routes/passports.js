@@ -32,9 +32,9 @@ passportsRouter.post('', (req, __, next) => {
         // todo クライアント情報をDBに問い合わせる
         const client = {
             id: req.user.client_id,
-            secret: 'motionpicture',
-            passport_issuer_work_shift_in_sesonds: 30,
-            total_number_of_passports_per_issuer: 30
+            secret: process.env.WAITER_NUMBER_OF_TOKENS_PER_UNIT.WAITER_SECRET,
+            passport_issuer_work_shift_in_sesonds: process.env.WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS,
+            total_number_of_passports_per_issuer: process.env.WAITER_NUMBER_OF_TOKENS_PER_UNIT
         };
         switch (req.query.db) {
             case 'mongodb':
@@ -71,3 +71,4 @@ passportsRouter.post('', (req, __, next) => {
     }
 }));
 exports.default = passportsRouter;
+//# sourceMappingURL=passports.js.map
