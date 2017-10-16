@@ -1,6 +1,7 @@
 # WAITER[サイト流入量コントロールシステム]
 
 [![CircleCI](https://circleci.com/gh/motionpicture/waiter.svg?style=svg)](https://circleci.com/gh/motionpicture/waiter)
+[![Known Vulnerabilities](https://snyk.io/test/github/motionpicture/waiter/badge.svg)](https://snyk.io/test/github/motionpicture/waiter)
 [![Coverage Status](https://coveralls.io/repos/github/motionpicture/waiter/badge.svg)](https://coveralls.io/github/motionpicture/waiter)
 
 ## プロジェクト背景
