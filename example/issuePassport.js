@@ -4,15 +4,15 @@
 
 const request = require('request-promise-native');
 
-const endpoint = 'http://localhost:8081';
+const endpoint = process.env.TEST_WAITER_ENDPOINT;
 
 let count = 0;
 
 const MAX_NUBMER_OF_PARALLEL_TASKS = 100;
-const INTERVAL_MILLISECONDS = 500;
+const INTERVAL_MILLISECONDS = 100;
 
 // 許可証を発行し続ける
-setInterval(
+const timer = setInterval(
     async () => {
         if (count > MAX_NUBMER_OF_PARALLEL_TASKS) {
             return;
