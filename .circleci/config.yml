@@ -70,7 +70,7 @@ jobs:
       - checkout
       - run:
           name: Dump Google Cloud Credentials to file
-          command: echo ${GOOGLE_AUTH} > ${HOME}/gcp-key.json
+          command: echo ${GOOGLE_AUTH} > ~/gcp-key.json
       - run:
           name: Set NPM_TOKEN
           command: echo "//registry.npmjs.org/:_authToken={$NPM_TOKEN}" > ~/.npmrc
@@ -92,9 +92,9 @@ jobs:
           name: Deploy to GCP app engine
           command: |
             # gcloud --quiet components update
-            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud auth activate-service-account --key-file ~/gcp-key.json
             gcloud config set project ${GOOGLE_PROJECT_ID}
-            gcloud --quiet app deploy app.yaml
+            gcloud --quiet app deploy ~/app.yaml
   # prerelease:
   #   docker:
   #     - image: circleci/node:8.4
