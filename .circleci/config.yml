@@ -73,7 +73,7 @@ jobs:
           command: echo ${GOOGLE_AUTH} > ~/gcp-key.json
       - run:
           name: Set NPM_TOKEN
-          command: echo "//registry.npmjs.org/:_authToken={$NPM_TOKEN}" > ./.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ./.npmrc
       - run:
           name: Prepare app.yaml
           command: |
