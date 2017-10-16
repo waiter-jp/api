@@ -7,10 +7,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Added
 
 ### Changed
+- マルチクライアントを設定できるように対応。
 
 ### Deprecated
 
 ### Removed
+- クライアント認証を削除。
 
 ### Fixed
 

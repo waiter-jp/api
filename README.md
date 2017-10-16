@@ -1,5 +1,8 @@
 # WAITER[サイト流入量コントロールシステム]
 
+[![CircleCI](https://circleci.com/gh/motionpicture/waiter.svg?style=svg)](https://circleci.com/gh/motionpicture/waiter)
+[![Coverage Status](https://coveralls.io/repos/github/motionpicture/waiter/badge.svg)](https://coveralls.io/github/motionpicture/waiter)
+
 ## プロジェクト背景
 - チケット購入サイトへのアクセスがある量感を超えると、システムで受け止め切ることは簡単でない。
 ムで受け止め切ることは簡単でないことを知る。
@@ -55,17 +58,11 @@ npm start
 ### Required environment variables
 ```shell
 set NODE_ENV=**********環境名**********
-set MONGOLAB_URI=**********MongoDB接続文字列**********
 set REDIS_HOST=**********Redis Cache接続ホスト**********
 set REDIS_PORT=**********Redis Cache接続ポート**********
 set REDIS_KEY=**********Redis Cache接続キー**********
-set SQL_SERVER_USERNAME=**********SQL Serverユーザーネーム**********
-set SQL_SERVER_PASSWORD=**********SQL Serverパスワード**********
-set SQL_SERVER_SERVER=**********SQL Serverサーバー**********
-set SQL_SERVER_DATABASE=**********SQL Serverデータベース**********
-set WAITER_SECRET=**********JWTシークレット**********
-set WAITER_SEQUENCE_COUNT_UNIT_IN_SECONDS=**********カウンターリセット単位(秒)**********
-set WAITER_NUMBER_OF_TOKENS_PER_UNIT=**********カウンター単位あたりの発行トークン数**********
+set WAITER_PASSPORT_ISSUER=**********許可証発行者(通常発行APIのドメインを指定)**********
+set WAITER_CLIENTS=**********クライアントリスト(オブジェクトの配列をjsonで指定)**********
 set WAITER_DEVELOPER_EMAIL=**********環境名**********
 ```
 
