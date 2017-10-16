@@ -73,28 +73,31 @@ jobs:
           command: echo ${GOOGLE_AUTH} > ~/gcp-key.json
       - run:
           name: Set NPM_TOKEN
-          command: echo "//registry.npmjs.org/:_authToken={$NPM_TOKEN}" > ~/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken={$NPM_TOKEN}" > ${HOME}/.npmrc
       - run:
           name: Prepare app.yaml
           command: |
-            echo "runtime: nodejs" >> ~/app.yaml
-            echo "env: flex" >> ~/app.yaml
-            echo "env_variables:" >> ~/app.yaml
-            echo "  NODE_ENV: 'development'" >> ~/app.yaml
-            echo "  NPM_TOKEN: '${NPM_TOKEN}'" >> ~/app.yaml
-            echo "  WAITER_PASSPORT_ISSUER: '${WAITER_PASSPORT_ISSUER_DEVELOPMENT}'" >> ~/app.yaml
-            echo "  WAITER_CLIENTS: '${WAITER_CLIENTS_DEVELOPMENT}'" >> ~/app.yaml
-            echo "  WAITER_DEVELOPER_EMAIL: '${WAITER_DEVELOPER_EMAIL_DEVELOPMENT}'" >> ~/app.yaml
-            echo "  REDIS_HOST: '${REDIS_HOST_DEVELOPMENT}'" >> ~/app.yaml
-            echo "  REDIS_PORT: ${REDIS_PORT_DEVELOPMENT}" >> ~/app.yaml
-            echo "  REDIS_KEY: '${REDIS_KEY_DEVELOPMENT}'" >> ~/app.yaml
+            echo "runtime: nodejs" >> ${HOME}/app.yaml
+            echo "env: flex" >> ${HOME}/app.yaml
+            echo "env_variables:" >> ${HOME}/app.yaml
+            echo "  NODE_ENV: 'development'" >> ${HOME}/app.yaml
+            echo "  NPM_TOKEN: '${NPM_TOKEN}'" >> ${HOME}/app.yaml
+            echo "  WAITER_PASSPORT_ISSUER: '${WAITER_PASSPORT_ISSUER_DEVELOPMENT}'" >> ${HOME}/app.yaml
+            echo "  WAITER_CLIENTS: '${WAITER_CLIENTS_DEVELOPMENT}'" >> ${HOME}/app.yaml
+            echo "  WAITER_DEVELOPER_EMAIL: '${WAITER_DEVELOPER_EMAIL_DEVELOPMENT}'" >> ${HOME}/app.yaml
+            echo "  REDIS_HOST: '${REDIS_HOST_DEVELOPMENT}'" >> ${HOME}/app.yaml
+            echo "  REDIS_PORT: ${REDIS_PORT_DEVELOPMENT}" >> ${HOME}/app.yaml
+            echo "  REDIS_KEY: '${REDIS_KEY_DEVELOPMENT}'" >> ${HOME}/app.yaml
+      - run:
+          name: List files
+          command: ls
       - run:
           name: Deploy to GCP app engine
           command: |
             # gcloud --quiet components update
             gcloud auth activate-service-account --key-file ~/gcp-key.json
             gcloud config set project ${GOOGLE_PROJECT_ID}
-            gcloud --quiet app deploy ~/app.yaml
+            gcloud --quiet app deploy ${HOME}/app.yaml
   # prerelease:
   #   docker:
   #     - image: circleci/node:8.4
