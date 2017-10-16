@@ -65,7 +65,6 @@ jobs:
             npm run doc
   deploy2development:
     docker:
-      - image: circleci/node:8.4
       - image: google/cloud-sdk
     steps:
       - checkout
@@ -74,7 +73,7 @@ jobs:
           command: echo ${GOOGLE_AUTH} > ${HOME}/gcp-key.json
       - run:
           name: Set NPM_TOKEN
-          command: echo "//registry.npmjs.org/:_authToken={$NPM_TOKEN}" >> ~/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken={$NPM_TOKEN}" > ~/.npmrc
       - run:
           name: Prepare app.yaml
           command: |
