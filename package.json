@@ -9,7 +9,7 @@
     }
   ],
   "dependencies": {
-    "@motionpicture/waiter-domain": "^2.0.0-alpha.0",
+    "@motionpicture/waiter-domain": "^2.0.0-alpha.1",
     "basic-auth": "^2.0.0",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
@@ -22,7 +22,7 @@
     "moment": "^2.19.1",
     "winston": "^2.4.0"
   },
-  "description": "This is a repogitory for waiter-prototype.",
+  "description": "Waiter web application",
   "devDependencies": {
     "@types/basic-auth": "^1.1.2",
     "@types/body-parser": "^1.16.5",
@@ -35,7 +35,7 @@
     "@types/jsonwebtoken": "^7.2.3",
     "@types/mocha": "^2.2.43",
     "@types/nock": "^8.2.1",
-    "@types/request": "^2.0.5",
+    "@types/request": "^2.0.6",
     "@types/request-promise-native": "^1.0.7",
     "@types/sinon": "^2.3.6",
     "@types/supertest": "^2.0.3",
@@ -64,7 +64,7 @@
   },
   "keywords": [],
   "license": "ISC",
-  "name": "waiter-prototype",
+  "name": "waiter",
   "private": true,
   "repository": {
     "type": "git",

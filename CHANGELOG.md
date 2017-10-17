@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Unreleased
 ### Added
+- 現在の発行単位取得エンドポイントを追加。
 
 ### Changed
 - マルチクライアントを設定できるように対応。
