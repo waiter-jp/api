@@ -36,7 +36,6 @@ async function issue() {
         `${endpoint}/passports`,
         {
             body: {
-                clientId: 'clientId',
                 scope: 'testscope'
             },
             json: true

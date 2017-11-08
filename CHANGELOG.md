@@ -5,10 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Unreleased
 ### Added
+- 発行規則取得エンドポイントを追加。
 - 現在の発行単位取得エンドポイントを追加。
 
 ### Changed
-- マルチクライアントを設定できるように対応。
+- マルチ発行規則を設定できるように対応。
 
 ### Deprecated
 

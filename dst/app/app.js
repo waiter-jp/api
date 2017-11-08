@@ -9,13 +9,12 @@ const createDebug = require("debug");
 const express = require("express");
 const expressValidator = require("express-validator");
 const helmet = require("helmet");
-const benchmarks_1 = require("./middlewares/benchmarks");
 const errorHandler_1 = require("./middlewares/errorHandler");
 const notFoundHandler_1 = require("./middlewares/notFoundHandler");
 const passports_1 = require("./routes/passports");
+const rules_1 = require("./routes/rules");
 const debug = createDebug('waiter-prototype:*');
 const app = express();
-app.use(benchmarks_1.default); // ベンチマーク
 app.use(cors()); // enable All CORS Requests
 app.use(helmet());
 app.use(helmet.contentSecurityPolicy({
@@ -49,6 +48,7 @@ app.use(expressValidator({})); // this line must be immediately after any of the
 // 静的ファイル
 // app.use(express.static(__dirname + '/../../public'));
 // routers
+app.use('/rules', rules_1.default);
 app.use('/passports', passports_1.default);
 // 404
 app.use(notFoundHandler_1.default);

@@ -10,17 +10,16 @@ import * as express from 'express';
 import * as expressValidator from 'express-validator';
 import * as helmet from 'helmet';
 
-import benchmarks from './middlewares/benchmarks';
 import errorHandler from './middlewares/errorHandler';
 import notFoundHandler from './middlewares/notFoundHandler';
 
 import passportsRouter from './routes/passports';
+import rulesRouter from './routes/rules';
 
 const debug = createDebug('waiter-prototype:*');
 
 const app = express();
 
-app.use(benchmarks); // ベンチマーク
 app.use(cors()); // enable All CORS Requests
 app.use(helmet());
 app.use(helmet.contentSecurityPolicy({
@@ -59,6 +58,7 @@ app.use(expressValidator({})); // this line must be immediately after any of the
 // app.use(express.static(__dirname + '/../../public'));
 
 // routers
+app.use('/rules', rulesRouter);
 app.use('/passports', passportsRouter);
 
 // 404

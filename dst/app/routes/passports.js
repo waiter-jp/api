@@ -25,14 +25,13 @@ const passportsRouter = express_1.Router();
  */
 passportsRouter.post('', (req, __, next) => {
     // クライアントが何の許可証かを制御するためのスコープ
-    req.checkBody('clientId', 'invalid clientId').notEmpty().withMessage('clientId is required');
     req.checkBody('scope', 'invalid scope').notEmpty().withMessage('scope is required');
     next();
 }, validator_1.default, (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
-        const clientRepo = new waiter.repository.Client();
+        const ruleRepo = new waiter.repository.Rule();
         const passportIssueUnitRepo = new waiter.repository.PassportIssueUnit(redis.getClient());
-        const token = yield waiter.service.passport.issue(req.body.clientId, req.body.scope)(clientRepo, passportIssueUnitRepo);
+        const token = yield waiter.service.passport.issue(req.body.scope)(ruleRepo, passportIssueUnitRepo);
         debug('token:', token);
         res.status(http_status_1.CREATED).json({
             token: token
@@ -45,16 +44,14 @@ passportsRouter.post('', (req, __, next) => {
 /**
  * クライアントIDとスコープから、現在の許可証数を取得する
  */
-passportsRouter.get('/:clientId/:scope/currentIssueUnit', (req, __, next) => {
-    // クライアントが何の許可証かを制御するためのスコープ
-    req.checkParams('clientId', 'invalid clientId').notEmpty().withMessage('clientId is required');
+passportsRouter.get('/:scope/currentIssueUnit', (req, __, next) => {
     req.checkParams('scope', 'invalid scope').notEmpty().withMessage('scope is required');
     next();
 }, validator_1.default, (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
-        const clientRepo = new waiter.repository.Client();
+        const ruleRepo = new waiter.repository.Rule();
         const passportIssueUnitRepo = new waiter.repository.PassportIssueUnit(redis.getClient());
-        const issueUnit = yield waiter.service.passport.currentIssueUnit(req.params.clientId, req.params.scope)(clientRepo, passportIssueUnitRepo);
+        const issueUnit = yield waiter.service.passport.currentIssueUnit(req.params.scope)(ruleRepo, passportIssueUnitRepo);
         debug('issueUnit:', issueUnit);
         res.json(issueUnit);
     }
