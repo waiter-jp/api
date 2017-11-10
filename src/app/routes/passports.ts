@@ -12,7 +12,7 @@ import * as redis from '../../redis';
 
 import validator from '../middlewares/validator';
 
-const debug = createDebug('waiter-prototype:router:passports');
+const debug = createDebug('waiter:router:passports');
 const passportsRouter = Router();
 
 /**

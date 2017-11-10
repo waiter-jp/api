@@ -52,7 +52,7 @@ describe('validatorMiddleware.default()', () => {
         };
         const params = {
             req: {
-                getValidationResult: () => validatorResult
+                getValidationResult: () => Promise.resolve(validatorResult)
             },
             res: {},
             next: () => undefined

@@ -16,7 +16,7 @@ import notFoundHandler from './middlewares/notFoundHandler';
 import passportsRouter from './routes/passports';
 import rulesRouter from './routes/rules';
 
-const debug = createDebug('waiter-prototype:*');
+const debug = createDebug('waiter:*');
 
 const app = express();
 

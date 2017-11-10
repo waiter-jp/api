@@ -13,7 +13,7 @@ const errorHandler_1 = require("./middlewares/errorHandler");
 const notFoundHandler_1 = require("./middlewares/notFoundHandler");
 const passports_1 = require("./routes/passports");
 const rules_1 = require("./routes/rules");
-const debug = createDebug('waiter-prototype:*');
+const debug = createDebug('waiter:*');
 const app = express();
 app.use(cors()); // enable All CORS Requests
 app.use(helmet());

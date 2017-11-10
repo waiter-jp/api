@@ -18,7 +18,7 @@ const express_1 = require("express");
 const http_status_1 = require("http-status");
 const redis = require("../../redis");
 const validator_1 = require("../middlewares/validator");
-const debug = createDebug('waiter-prototype:router:passports');
+const debug = createDebug('waiter:router:passports');
 const passportsRouter = express_1.Router();
 /**
  * 許可証発行
