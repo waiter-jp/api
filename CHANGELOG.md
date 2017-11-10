@@ -5,12 +5,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Unreleased
 ### Added
+- 発行規則取得エンドポイントを追加。
+- 現在の発行単位取得エンドポイントを追加。
 
 ### Changed
+- マルチ発行規則を設定できるように対応。
 
 ### Deprecated
 
 ### Removed
+- クライアント認証を削除。
 
 ### Fixed
 

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>WAITER dashborad</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link href="./css/dashboard.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <script>
+        // 実行開始時からの経過時間
+        var time;
+        var WAITER_ENDPOINT = 'http://localhost:8081';
+
+        var numberOfPassportsIssuedWithRedis;
+        var sumOfResponseTimesRedis;
+        var numberOfResponsesRedis;
+
+        var timerChart;
+        var timerRedis;
+
+        function execute() {
+            // 実行中であれば中止してから
+            if (time !== undefined) {
+                cancel();
+            }
+
+            // データ初期化
+            time = new Date();
+            numberOfPassportsIssuedWithRedis = 0;
+            sumOfResponseTimesRedis = 0;
+            numberOfResponsesRedis = 0;
+
+            startCharts();
+        }
+
+        function startCharts() {
+            // チャート初期化
+            var chart1 = new CanvasJS.Chart("chartContainer1",
+                {
+                    axisX: {
+                        title: "日時",
+                        titleFontSize: 16,
+                        labelFontSize: 12,
+                        gridThickness: 1,
+                        interval: 1,
+                        intervalType: "second",
+                        // labelFormatter: function (e) {
+                        //     return CanvasJS.formatDate(e.value, "mm:ss");
+                        // },
+                        // labelAngle: -30
+                    },
+                    axisY: {
+                        title: "累計許可証発行数",
+                        titleFontSize: 16,
+                        labelFontSize: 12,
+                        gridThickness: 1,
+                        minimum: 0,
+                        // maximum: 300
+                    },
+                    data: [
+                        {
+                            type: "spline",
+                            name: "Redis",
+                            showInLegend: true,
+                            dataPoints: [
+                                { x: time, y: 0 }
+                            ]
+                        }
+                    ]
+                }
+            );
+
+            var chart2 = new CanvasJS.Chart("chartContainer2",
+                {
+                    axisX: {
+                        title: "日時",
+                        titleFontSize: 16,
+                        labelFontSize: 12,
+                        // gridThickness: 1,
+                        // interval: 1,
+                        // intervalType: "second",
+                        // labelAngle: -30
+                    },
+                    axisY: {
+                        title: "累計許可証発行数",
+                        titleFontSize: 16,
+                        labelFontSize: 12,
+                        gridThickness: 1,
+                        minimum: 0,
+                        // maximum: 300
+                    },
+                    data: [
+                        {
+                            type: "spline",
+                            name: "Redis",
+                            showInLegend: true,
+                            dataPoints: [
+                                { x: time, y: 0 }
+                            ]
+                        }
+                    ]
+                }
+            );
+
+            // レスポンスタイム平均値のバーチャート
+            var chart3 = new CanvasJS.Chart("chartContainer3",
+                {
+                    axisY: {
+                        title: "レスポンスタイム(ミリ秒)",
+                        titleFontSize: 16,
+                        labelFontSize: 12,
+                        minimum: 0,
+                        // maximum: 300
+                    },
+                    data: [{
+                        type: "bar",
+                        dataPoints: [
+                            { label: "Redis", y: 0 },
+                        ]
+                    }]
+                }
+            );
+
+            chart1.render();
+            chart2.render();
+            chart3.render();
+
+            // チャートにデータを追加し続ける
+            timerChart = setInterval(function () {
+                var time = new Date();
+                // 時点での発行数データを追加
+                var numberOfDataPoints = 50;
+                chart1.options.data[0].dataPoints.push({ x: time, y: numberOfPassportsIssuedWithRedis });
+                chart1.options.data[0].dataPoints = chart1.options.data[0].dataPoints.slice(-numberOfDataPoints);
+                chart1.options.axisY.minimum = chart1.options.data[0].dataPoints[0].y;
+
+                chart2.options.data[0].dataPoints.push({ x: time, y: numberOfPassportsIssuedWithRedis });
+
+                chart3.options.data[0].dataPoints[0].y = sumOfResponseTimesRedis / numberOfResponsesRedis;
+
+                chart3.render();
+                chart1.render();
+                chart2.render();
+            }, 250);
+
+            // 許可証を発行し続ける
+            const intervalOfIssuingPassport = ($('input[name="intervalOfIssuingPassport"]').val()) ? parseInt($('input[name="intervalOfIssuingPassport"]').val(), 10) : 500;
+            timerRedis = setInterval(function () {
+                var start;
+                $.ajax({
+                    url: WAITER_ENDPOINT + '/passports',
+                    method: 'POST',
+                    data: {
+                        scope: 'testscope'
+                    },
+                    beforeSend: function (xhr, settings) {
+                        // xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken2);
+                        start = new Date();
+                    }
+                }).done(function (data) {
+                    if (data.token) {
+                        numberOfPassportsIssuedWithRedis += 1;
+                    }
+                }).fail(function (jqXHR, textStatus) {
+                    console.error(jqXHR, textStatus);
+                }).always(function () {
+                    sumOfResponseTimesRedis += new Date() - start;
+                    numberOfResponsesRedis += 1;
+                    console.log('sumOfResponseTimesRedis, numberOfResponsesRedis', sumOfResponseTimesRedis, numberOfResponsesRedis);
+                });
+            }, intervalOfIssuingPassport);
+        }
+
+        function cancel() {
+            time = undefined;
+            if (timerChart !== undefined) {
+                clearInterval(timerChart);
+            }
+            if (timerRedis !== undefined) {
+                clearInterval(timerRedis);
+            }
+        }
+    </script>
+
+    <div id="wrapper">
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">WAITER dashborad</a>
+            </div>
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+
+            </div>
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <input class="form-control" name="scope" placeholder="スコープ">
+                            </div>
+
+                            <button type="button" class="btn btn-default" onclick="updateNow();">更新</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">現在の許可証発行数</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="chartContainer-now" style="width: 100%; height: 300px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <input class="form-control" name="intervalOfIssuingPassport" placeholder="リクエスト間隔(ミリ秒)で">
+                            </div>
+
+                            <button type="button" class="btn btn-default" onclick="execute();">実行</button>
+                            <button type="button" class="btn btn-default" onclick="cancel();">中止</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">許可証発行数の遷移(直近10秒)</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="chartContainer1" style="width: 100%; height: 500px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">許可証発行数の遷移</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="chartContainer2" style="width: 100%; height: 500px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">レスポンスタイム平均値DB比較</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div id="chartContainer3" style="width: 100%; height: 300px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js"></script>
+
+</body>
+
+</html>
