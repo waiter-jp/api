@@ -128,7 +128,7 @@ workflows:
             - doc
           filters:
             branches:
-              only: feature/WAITER-7
+              only: develop
       # - prerelease:
       #     requires:
       #       - doc
