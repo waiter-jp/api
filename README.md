@@ -14,7 +14,6 @@
 
 ## Background
 - チケット購入サイトへのアクセスがある量感を超えると、システムで受け止め切ることは簡単でない。
-ムで受け止め切ることは簡単でないことを知る。
 - インフラにコストをかけることで解決するのは簡単だが、コストに限度のないケースは少ない。
 - GMO、SendGrid等、外部サービスと連携するシステムをつくる以上、外部サービス側の限度を考慮する必要がある。
 - アプリケーション(ソフトウェア)のレベルでできる限りのことはしたい。
@@ -38,16 +37,16 @@ node.js application
 
 ### Environment variables
 
-| Name                                       | Required              | Purpose                           | Value        |
-|--------------------------------------------|-----------------------|-----------------------------------|--------------|
-| `DEBUG`                                    | false                 | Debug                             | waiter:* |
-| `NODE_ENV`                                 | true                  | 許可証暗号化の秘密鍵                ||
-| `WAITER_PASSPORT_ISSUER`                   | true                  | 許可証発行者識別子(通常発行APIのドメインを指定)                 ||
-| `WAITER_RULES`                             | true                  | 発行規則リスト                     ||
-| `WAITER_SECRET`                            | true                  | 許可証暗号化の秘密鍵                ||
-| `REDIS_HOST`                               | true                  | Redis Cache接続ホスト              ||
-| `REDIS_PORT`                               | true                  | Redis Cache接続ポート              ||
-| `REDIS_KEY`                                | true                  | Redis Cache接続キー                ||
+| Name                     | Required | Purpose                                   | Value    |
+| ------------------------ | -------- | ----------------------------------------- | -------- |
+| `DEBUG`                  | false    | Debug                                     | waiter:* |
+| `NODE_ENV`               | true     | 許可証暗号化の秘密鍵                       |          |
+| `WAITER_PASSPORT_ISSUER` | true     | 許可証発行者識別子(通常発行APIのドメインを指定) |          |
+| `WAITER_RULES`           | true     | 発行規則リスト                               |          |
+| `WAITER_SECRET`          | true     | 許可証暗号化の秘密鍵                       |          |
+| `REDIS_HOST`             | true     | Redis Cache接続ホスト                        |          |
+| `REDIS_PORT`             | true     | Redis Cache接続ポート                        |          |
+| `REDIS_KEY`              | true     | Redis Cache接続キー                         |          |
 
 ## Jsdoc
 

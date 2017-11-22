@@ -9,7 +9,7 @@ const waiter = require("@motionpicture/waiter-domain");
 // const debug = createDebug('waiter:redis');
 let client;
 function createClient() {
-    const c = new waiter.Redis({
+    const c = new waiter.redis({
         // tslint:disable-next-line:no-magic-numbers
         port: parseInt(process.env.REDIS_PORT, 10),
         host: process.env.REDIS_HOST,

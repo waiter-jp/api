@@ -8,10 +8,10 @@ import * as waiter from '@motionpicture/waiter-domain';
 
 // const debug = createDebug('waiter:redis');
 
-let client: waiter.Redis.Redis | undefined;
+let client: waiter.redis.Redis | undefined;
 
 function createClient() {
-    const c = new waiter.Redis({
+    const c = new waiter.redis({
         // tslint:disable-next-line:no-magic-numbers
         port: parseInt(<string>process.env.REDIS_PORT, 10),
         host: <string>process.env.REDIS_HOST,
