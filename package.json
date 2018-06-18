@@ -20,7 +20,8 @@
     "helmet": "^3.6.1",
     "http-status": "^1.0.1",
     "moment": "^2.18.1",
-    "winston": "^2.3.1"
+    "winston": "^2.3.1",
+    "snyk": "^1.83.0"
   },
   "description": "This is a repogitory for waiter-prototype.",
   "devDependencies": {
@@ -43,7 +44,6 @@
     "nsp": "^2.6.3",
     "request-promise-native": "^1.0.4",
     "rimraf": "^2.6.1",
-    "snyk": "^1.36.2",
     "supertest": "^3.0.0",
     "tslint": "^5.5.0",
     "tslint-microsoft-contrib": "^5.0.1",
@@ -70,7 +70,10 @@
     "tslint": "tslint --type-check --project tsconfig.json -c tslint.json app/**/*.ts server.ts test/**/*.ts",
     "preversion": "npm run clean && npm run build && npm test",
     "version": "git add -A",
-    "postversion": "git push origin --tags"
+    "postversion": "git push origin --tags",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
-  "version": "1.0.6"
+  "version": "1.0.6",
+  "snyk": true
 }
