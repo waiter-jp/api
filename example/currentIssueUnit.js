@@ -33,7 +33,7 @@ const timer = setInterval(
 
 async function issue() {
     const response = await request.get(
-        `${endpoint}/passports/testscope/currentIssueUnit`,
+        `${endpoint}/passports/mcdonalds/currentIssueUnit`,
         {
             json: true
         }

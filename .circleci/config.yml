@@ -71,9 +71,9 @@ jobs:
       - run:
           name: Dump Google Cloud Credentials to file
           command: echo ${GOOGLE_AUTH} > ~/gcp-key.json
-      - run:
-          name: Set NPM_TOKEN
-          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ./.npmrc
+    #   - run:
+    #       name: Set NPM_TOKEN
+    #       command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ./.npmrc
       - run:
           name: Prepare app.yaml
           command: |
@@ -81,7 +81,6 @@ jobs:
             echo "env: flex" >> ./app.yaml
             echo "env_variables:" >> ./app.yaml
             echo "  NODE_ENV: 'development'" >> ./app.yaml
-            echo "  NPM_TOKEN: '${NPM_TOKEN}'" >> ./app.yaml
             echo "  WAITER_PASSPORT_ISSUER: '${WAITER_PASSPORT_ISSUER_DEVELOPMENT}'" >> ./app.yaml
             echo "  WAITER_RULES: '${WAITER_RULES_DEVELOPMENT}'" >> ./app.yaml
             echo "  WAITER_SECRET: '${WAITER_SECRET_DEVELOPMENT}'" >> ./app.yaml
@@ -98,18 +97,6 @@ jobs:
             gcloud auth activate-service-account --key-file ~/gcp-key.json
             gcloud config set project ${GOOGLE_PROJECT_ID}
             gcloud --quiet app deploy ./app.yaml
-  # prerelease:
-  #   docker:
-  #     - image: circleci/node:8.4
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         key: dependency-cache-{{ checksum "package.json" }}
-  #     - run:
-  #         name: deploy to azure webapps development
-  #         command: |
-  #           git remote add prerelease ${DEPLOY_TARGET_REPOSITORY_PRERELEASE}
-  #           git push prerelease master 
 # Used for orchestrating all jobs.
 workflows:
   version: 2
@@ -123,12 +110,12 @@ workflows:
       - doc:
           requires:
             - test
-      # - deploy2development:
-      #     requires:
-      #       - doc
-      #     filters:
-      #       branches:
-      #         only: develop
+      - deploy2development:
+          requires:
+            - doc
+          filters:
+            branches:
+              only: develop
       # - prerelease:
       #     requires:
       #       - doc

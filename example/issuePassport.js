@@ -36,7 +36,7 @@ async function issue() {
         `${endpoint}/passports`,
         {
             body: {
-                scope: 'testscope'
+                scope: 'mcdonalds'
             },
             json: true
         }
