@@ -9,7 +9,7 @@
     }
   ],
   "dependencies": {
-    "@waiter/domain": "^2.0.3",
+    "@waiter/domain": "^2.0.4",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "debug": "^3.1.0",
