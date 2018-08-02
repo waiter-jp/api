@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 - マルチ発行規則を設定できるように対応。
+- [@waiter/domain](https://www.npmjs.com/package/@waiter/domain)をインストール。
 
 ### Deprecated
 

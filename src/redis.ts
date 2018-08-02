@@ -3,7 +3,7 @@
  * @module
  */
 
-import * as waiter from '@motionpicture/waiter-domain';
+import * as waiter from '@waiter/domain';
 // import * as createDebug from 'debug';
 
 // const debug = createDebug('waiter:redis');

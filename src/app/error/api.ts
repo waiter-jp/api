@@ -1,10 +1,7 @@
-import { factory } from '@motionpicture/waiter-domain';
+import { factory } from '@waiter/domain';
 
 /**
  * APIError
- * @export
- * @class APIError
- * @extends {Error}
  */
 export class APIError extends Error {
     public readonly code: number;

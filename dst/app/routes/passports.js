@@ -12,7 +12,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const waiter = require("@motionpicture/waiter-domain");
+const waiter = require("@waiter/domain");
 const createDebug = require("debug");
 const express_1 = require("express");
 const http_status_1 = require("http-status");

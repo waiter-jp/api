@@ -3,7 +3,7 @@
  * @ignore
  */
 
-import * as waiter from '@motionpicture/waiter-domain';
+import * as waiter from '@waiter/domain';
 import * as assert from 'assert';
 import { INTERNAL_SERVER_ERROR } from 'http-status';
 import * as nock from 'nock';

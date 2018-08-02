@@ -4,7 +4,7 @@
  * @module middlewares.errorHandler
  */
 
-import * as waiter from '@motionpicture/waiter-domain';
+import * as waiter from '@waiter/domain';
 import { NextFunction, Request, Response } from 'express';
 import { BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, TOO_MANY_REQUESTS } from 'http-status';
 
@@ -56,7 +56,6 @@ export default (err: any, __: Request, res: Response, next: NextFunction) => {
                 // 400
                 default:
                     apiError = new APIError(BAD_REQUEST, [err]);
-                    break;
             }
         } else {
             // 500

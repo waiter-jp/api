@@ -4,7 +4,7 @@
  * @module middlewares.validator
  */
 
-import { factory } from '@motionpicture/waiter-domain';
+import { factory } from '@waiter/domain';
 import * as createDebug from 'debug';
 import { NextFunction, Request, Response } from 'express';
 import { } from 'express-validator'; // 型を読み込んでおかないとテストコードでコンパイルエラー発生

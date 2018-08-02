@@ -1,8 +1,8 @@
-# WAITER[サイト流入量コントロールシステム]
+# Waiter サイト流入量コントロールシステム
 
-[![CircleCI](https://circleci.com/gh/motionpicture/waiter.svg?style=svg)](https://circleci.com/gh/motionpicture/waiter)
-[![Known Vulnerabilities](https://snyk.io/test/github/motionpicture/waiter/badge.svg)](https://snyk.io/test/github/motionpicture/waiter)
-[![Coverage Status](https://coveralls.io/repos/github/motionpicture/waiter/badge.svg)](https://coveralls.io/github/motionpicture/waiter)
+[![CircleCI](https://circleci.com/gh/waiter-jp/api.svg?style=svg)](https://circleci.com/gh/waiter-jp/api)
+[![Known Vulnerabilities](https://snyk.io/test/github/waiter-jp/api/badge.svg)](https://snyk.io/test/github/waiter-jp/api)
+[![Coverage Status](https://coveralls.io/repos/github/waiter-jp/api/badge.svg)](https://coveralls.io/github/waiter-jp/api)
 
 ## Table of contents
 
@@ -37,16 +37,16 @@ node.js application
 
 ### Environment variables
 
-| Name                     | Required | Purpose                                   | Value    |
-| ------------------------ | -------- | ----------------------------------------- | -------- |
-| `DEBUG`                  | false    | Debug                                     | waiter:* |
-| `NODE_ENV`               | true     | 許可証暗号化の秘密鍵                       |          |
+| Name                     | Required | Purpose                                         | Value    |
+| ------------------------ | -------- | ----------------------------------------------- | -------- |
+| `DEBUG`                  | false    | Debug                                           | waiter:* |
+| `NODE_ENV`               | true     | 許可証暗号化の秘密鍵                            |          |
 | `WAITER_PASSPORT_ISSUER` | true     | 許可証発行者識別子(通常発行APIのドメインを指定) |          |
-| `WAITER_RULES`           | true     | 発行規則リスト                               |          |
-| `WAITER_SECRET`          | true     | 許可証暗号化の秘密鍵                       |          |
-| `REDIS_HOST`             | true     | Redis Cache接続ホスト                        |          |
-| `REDIS_PORT`             | true     | Redis Cache接続ポート                        |          |
-| `REDIS_KEY`              | true     | Redis Cache接続キー                         |          |
+| `WAITER_RULES`           | true     | 発行規則リスト                                  |          |
+| `WAITER_SECRET`          | true     | 許可証暗号化の秘密鍵                            |          |
+| `REDIS_HOST`             | true     | Redis Cache接続ホスト                           |          |
+| `REDIS_PORT`             | true     | Redis Cache接続ポート                           |          |
+| `REDIS_KEY`              | true     | Redis Cache接続キー                             |          |
 
 ## Jsdoc
 

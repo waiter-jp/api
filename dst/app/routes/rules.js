@@ -12,7 +12,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const waiter = require("@motionpicture/waiter-domain");
+const waiter = require("@waiter/domain");
 const express_1 = require("express");
 const validator_1 = require("../middlewares/validator");
 const rulesRouter = express_1.Router();

@@ -3,7 +3,7 @@
  * @module middlewares.notFoundHandler
  */
 
-import { factory } from '@motionpicture/waiter-domain';
+import { factory } from '@waiter/domain';
 import { NextFunction, Request, Response } from 'express';
 
 export default (req: Request, __: Response, next: NextFunction) => {

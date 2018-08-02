@@ -24,7 +24,7 @@
         "dateFormat": "ddd MMM Do YYYY",
         "outputSourceFiles": true,
         "outputSourcePath": true,
-        "systemName": "ウェイターウェブアプリケーション",
+        "systemName": "Waiter API Application",
         "footer": "",
         "navType": "vertical",
         "theme": "cosmo",

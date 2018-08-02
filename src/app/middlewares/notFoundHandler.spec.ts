@@ -3,7 +3,7 @@
  * @ignore
  */
 
-import * as waiter from '@motionpicture/waiter-domain';
+import * as waiter from '@waiter/domain';
 import * as assert from 'assert';
 import * as nock from 'nock';
 import * as sinon from 'sinon';

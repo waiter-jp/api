@@ -4,7 +4,7 @@
  * @module
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const waiter = require("@motionpicture/waiter-domain");
+const waiter = require("@waiter/domain");
 // import * as createDebug from 'debug';
 // const debug = createDebug('waiter:redis');
 let client;

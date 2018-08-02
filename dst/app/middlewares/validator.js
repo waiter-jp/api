@@ -13,7 +13,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const waiter_domain_1 = require("@motionpicture/waiter-domain");
+const domain_1 = require("@waiter/domain");
 const createDebug = require("debug");
 const http_status_1 = require("http-status");
 const api_1 = require("../error/api");
@@ -22,7 +22,7 @@ exports.default = (req, __, next) => __awaiter(this, void 0, void 0, function* (
     const validatorResult = yield req.getValidationResult();
     if (!validatorResult.isEmpty()) {
         const errors = validatorResult.array().map((mappedRrror) => {
-            return new waiter_domain_1.factory.errors.Argument(mappedRrror.param, mappedRrror.msg);
+            return new domain_1.factory.errors.Argument(mappedRrror.param, mappedRrror.msg);
         });
         debug('validation result not empty...', errors);
         next(new api_1.APIError(http_status_1.BAD_REQUEST, errors));

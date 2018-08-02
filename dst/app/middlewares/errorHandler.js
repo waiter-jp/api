@@ -5,7 +5,7 @@
  * @module middlewares.errorHandler
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const waiter = require("@motionpicture/waiter-domain");
+const waiter = require("@waiter/domain");
 const http_status_1 = require("http-status");
 const api_1 = require("../error/api");
 exports.default = (err, __, res, next) => {
@@ -47,7 +47,6 @@ exports.default = (err, __, res, next) => {
                 // 400
                 default:
                     apiError = new api_1.APIError(http_status_1.BAD_REQUEST, [err]);
-                    break;
             }
         }
         else {

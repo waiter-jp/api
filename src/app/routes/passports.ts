@@ -3,7 +3,7 @@
  * @ignore
  */
 
-import * as waiter from '@motionpicture/waiter-domain';
+import * as waiter from '@waiter/domain';
 import * as createDebug from 'debug';
 import { Router } from 'express';
 import { CREATED } from 'http-status';
