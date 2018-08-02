@@ -3,9 +3,11 @@ iisnode/
 npm-debug.log*
 .vscode/
 .env*
-docs/
+doc/
 app.yaml*
 **/*.log
+coverage/
+.nyc_output/
 
 .googleappengine/*
 
