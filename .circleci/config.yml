@@ -83,7 +83,7 @@ jobs:
             echo "  NODE_ENV: 'development'" >> ./app.yaml
             echo "  WAITER_PASSPORT_ISSUER: '${WAITER_PASSPORT_ISSUER_DEVELOPMENT}'" >> ./app.yaml
             echo "  WAITER_RULES: '${WAITER_RULES_DEVELOPMENT}'" >> ./app.yaml
-            echo "  WAITER_RULES: '${WAITER_RULES_DEVELOPMENT}'" >> ./app.yaml
+            echo "  WAITER_SECRET: '${WAITER_SECRET_DEVELOPMENT}'" >> ./app.yaml
             echo "  WAITER_PROJECTS: '${WAITER_PROJECTS_DEVELOPMENT}'" >> ./app.yaml
             echo "  REDIS_HOST: '${REDIS_HOST_DEVELOPMENT}'" >> ./app.yaml
             echo "  REDIS_PORT: ${REDIS_PORT_DEVELOPMENT}" >> ./app.yaml
