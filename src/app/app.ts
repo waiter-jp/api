@@ -12,11 +12,9 @@ import * as helmet from 'helmet';
 
 import errorHandler from './middlewares/errorHandler';
 import notFoundHandler from './middlewares/notFoundHandler';
+import router from './routes/router';
 
-import passportsRouter from './routes/passports';
-import rulesRouter from './routes/rules';
-
-const debug = createDebug('waiter:*');
+const debug = createDebug('waiter:app');
 
 const app = express();
 
@@ -58,8 +56,7 @@ app.use(expressValidator({})); // this line must be immediately after any of the
 // app.use(express.static(__dirname + '/../../public'));
 
 // routers
-app.use('/rules', rulesRouter);
-app.use('/passports', passportsRouter);
+app.use('/', router);
 
 // 404
 app.use(notFoundHandler);

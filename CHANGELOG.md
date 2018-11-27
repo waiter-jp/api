@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ## Unreleased
 
 ### Added
+- 発行規則をプロジェクト単位で管理できるように対応
 
 ### Changed
 

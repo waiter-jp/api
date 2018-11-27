@@ -11,9 +11,8 @@ const expressValidator = require("express-validator");
 const helmet = require("helmet");
 const errorHandler_1 = require("./middlewares/errorHandler");
 const notFoundHandler_1 = require("./middlewares/notFoundHandler");
-const passports_1 = require("./routes/passports");
-const rules_1 = require("./routes/rules");
-const debug = createDebug('waiter:*');
+const router_1 = require("./routes/router");
+const debug = createDebug('waiter:app');
 const app = express();
 app.use(cors()); // enable All CORS Requests
 app.use(helmet());
@@ -48,8 +47,7 @@ app.use(expressValidator({})); // this line must be immediately after any of the
 // 静的ファイル
 // app.use(express.static(__dirname + '/../../public'));
 // routers
-app.use('/rules', rules_1.default);
-app.use('/passports', passports_1.default);
+app.use('/', router_1.default);
 // 404
 app.use(notFoundHandler_1.default);
 // error handlers

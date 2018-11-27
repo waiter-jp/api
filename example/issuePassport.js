@@ -33,10 +33,10 @@ const timer = setInterval(
 
 async function issue() {
     const response = await request.post(
-        `${endpoint}/passports`,
+        `${endpoint}/projects/cinerino/passports`,
         {
             body: {
-                scope: 'mcdonalds'
+                scope: 'scope'
             },
             json: true
         }

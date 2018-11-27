@@ -34,6 +34,7 @@
     <script>
         // 実行開始時からの経過時間
         var time;
+        var PROJECT_ID = 'cinerino';
         var WAITER_ENDPOINT = 'http://localhost:8081';
 
         var numberOfPassportsIssuedWithRedis;
@@ -173,7 +174,7 @@
             timerRedis = setInterval(function () {
                 var start;
                 $.ajax({
-                    url: WAITER_ENDPOINT + '/passports',
+                    url: WAITER_ENDPOINT + '/projects/' + PROJECT_ID + '/passports',
                     method: 'POST',
                     data: {
                         scope: 'mcdonalds'
