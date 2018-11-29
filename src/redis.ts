@@ -1,8 +1,6 @@
 /**
  * redis cacheクライアント
- * @module
  */
-
 import * as waiter from '@waiter/domain';
 // import * as createDebug from 'debug';
 

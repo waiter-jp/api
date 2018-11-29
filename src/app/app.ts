@@ -1,11 +1,8 @@
 /**
  * Expressアプリケーション
- * @module
  */
-
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
-import * as createDebug from 'debug';
 import * as express from 'express';
 import * as expressValidator from 'express-validator';
 import * as helmet from 'helmet';
@@ -13,8 +10,6 @@ import * as helmet from 'helmet';
 import errorHandler from './middlewares/errorHandler';
 import notFoundHandler from './middlewares/notFoundHandler';
 import router from './routes/router';
-
-const debug = createDebug('waiter:app');
 
 const app = express();
 
@@ -32,19 +27,6 @@ app.use(helmet.hsts({
     maxAge: SIXTY_DAYS_IN_SECONDS,
     includeSubdomains: false
 }));
-
-if (process.env.NODE_ENV !== 'production') {
-    // サーバーエラーテスト
-    app.get('/dev/uncaughtexception', (req) => {
-        req.on('data', (chunk) => {
-            debug(chunk);
-        });
-
-        req.on('end', () => {
-            throw new Error('uncaughtexception manually');
-        });
-    });
-}
 
 app.use(bodyParser.json());
 // The extended option allows to choose between parsing the URL-encoded data

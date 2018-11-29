@@ -1,9 +1,8 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * redis cacheクライアント
- * @module
  */
-Object.defineProperty(exports, "__esModule", { value: true });
 const waiter = require("@waiter/domain");
 // import * as createDebug from 'debug';
 // const debug = createDebug('waiter:redis');

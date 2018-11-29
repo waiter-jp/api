@@ -1,9 +1,4 @@
 "use strict";
-/**
- * バリデーターミドルウェア
- * リクエストのパラメータ(query strings or body parameters)に対するバリデーション
- * @module middlewares.validator
- */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -13,6 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * バリデーターミドルウェア
+ * リクエストのパラメータ(query strings or body parameters)に対するバリデーション
+ */
 const domain_1 = require("@waiter/domain");
 const createDebug = require("debug");
 const http_status_1 = require("http-status");
