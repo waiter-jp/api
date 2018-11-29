@@ -18,6 +18,7 @@ function createClient() {
     });
 
     c.on('error', (err: any) => {
+        // tslint:disable-next-line:no-console
         console.error(err);
     });
 
