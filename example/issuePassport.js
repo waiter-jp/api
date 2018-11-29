@@ -36,7 +36,7 @@ async function issue() {
         `${endpoint}/projects/cinerino/passports`,
         {
             body: {
-                scope: 'scope'
+                scope: 'mcdonalds'
             },
             json: true
         }
