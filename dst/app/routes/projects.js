@@ -1,8 +1,4 @@
 "use strict";
-/**
- * 許可証ルーター
- * @ignore
- */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -12,27 +8,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * プロジェクトルーター
+ */
 const waiter = require("@waiter/domain");
-const createDebug = require("debug");
 const express_1 = require("express");
 const http_status_1 = require("http-status");
 const redis = require("../../redis");
 const validator_1 = require("../middlewares/validator");
-const debug = createDebug('waiter:router:passports');
-const passportsRouter = express_1.Router();
+const projectsRouter = express_1.Router();
 /**
  * 許可証発行
  */
-passportsRouter.post('', (req, __, next) => {
+projectsRouter.post('/:projectId/passports', (req, __, next) => {
     // クライアントが何の許可証かを制御するためのスコープ
     req.checkBody('scope', 'invalid scope').notEmpty().withMessage('scope is required');
     next();
 }, validator_1.default, (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
-        const ruleRepo = new waiter.repository.Rule();
-        const passportIssueUnitRepo = new waiter.repository.PassportIssueUnit(redis.getClient());
-        const token = yield waiter.service.passport.issue(req.body.scope)(ruleRepo, passportIssueUnitRepo);
-        debug('token:', token);
+        const token = yield waiter.service.passport.issue({
+            project: { id: req.params.projectId },
+            scope: req.body.scope
+        })({
+            passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
+            project: new waiter.repository.Project(),
+            rule: new waiter.repository.Rule()
+        });
         res.status(http_status_1.CREATED).json({
             token: token
         });
@@ -44,19 +45,35 @@ passportsRouter.post('', (req, __, next) => {
 /**
  * クライアントIDとスコープから、現在の許可証数を取得する
  */
-passportsRouter.get('/:scope/currentIssueUnit', (req, __, next) => {
+projectsRouter.get('/:projectId/passports/:scope/currentIssueUnit', (req, __, next) => {
     req.checkParams('scope', 'invalid scope').notEmpty().withMessage('scope is required');
     next();
 }, validator_1.default, (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
-        const ruleRepo = new waiter.repository.Rule();
-        const passportIssueUnitRepo = new waiter.repository.PassportIssueUnit(redis.getClient());
-        const issueUnit = yield waiter.service.passport.currentIssueUnit(req.params.scope)(ruleRepo, passportIssueUnitRepo);
-        debug('issueUnit:', issueUnit);
+        const issueUnit = yield waiter.service.passport.currentIssueUnit({
+            project: { id: req.params.projectId },
+            scope: req.params.scope
+        })({
+            passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
+            project: new waiter.repository.Project(),
+            rule: new waiter.repository.Rule()
+        });
         res.json(issueUnit);
     }
     catch (error) {
         next(error);
     }
 }));
-exports.default = passportsRouter;
+projectsRouter.get('/:projectId/rules', validator_1.default, (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+    try {
+        const ruleRepo = new waiter.repository.Rule();
+        const rules = ruleRepo.search({
+            project: { ids: [req.params.projectId] }
+        });
+        res.json(rules);
+    }
+    catch (error) {
+        next(error);
+    }
+}));
+exports.default = projectsRouter;

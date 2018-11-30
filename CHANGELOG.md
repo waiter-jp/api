@@ -18,6 +18,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Security
 
+## v3.0.0 - 2017-11-30
+
+### Added
+
+- 発行規則をプロジェクト単位で管理できるように対応
+- 発行規則にクライアント設定を追加
+
 ## v2.0.0 - 2017-08-02
 
 ### Added

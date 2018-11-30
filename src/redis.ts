@@ -1,8 +1,6 @@
 /**
  * redis cacheクライアント
- * @module
  */
-
 import * as waiter from '@waiter/domain';
 // import * as createDebug from 'debug';
 
@@ -20,6 +18,7 @@ function createClient() {
     });
 
     c.on('error', (err: any) => {
+        // tslint:disable-next-line:no-console
         console.error(err);
     });
 

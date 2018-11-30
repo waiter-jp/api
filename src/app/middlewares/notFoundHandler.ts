@@ -1,8 +1,6 @@
 /**
  * 404ハンドラーミドルウェア
- * @module middlewares.notFoundHandler
  */
-
 import { factory } from '@waiter/domain';
 import { NextFunction, Request, Response } from 'express';
 

@@ -1,22 +1,15 @@
 /**
  * Expressアプリケーション
- * @module
  */
-
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
-import * as createDebug from 'debug';
 import * as express from 'express';
 import * as expressValidator from 'express-validator';
 import * as helmet from 'helmet';
 
 import errorHandler from './middlewares/errorHandler';
 import notFoundHandler from './middlewares/notFoundHandler';
-
-import passportsRouter from './routes/passports';
-import rulesRouter from './routes/rules';
-
-const debug = createDebug('waiter:*');
+import router from './routes/router';
 
 const app = express();
 
@@ -35,19 +28,6 @@ app.use(helmet.hsts({
     includeSubdomains: false
 }));
 
-if (process.env.NODE_ENV !== 'production') {
-    // サーバーエラーテスト
-    app.get('/dev/uncaughtexception', (req) => {
-        req.on('data', (chunk) => {
-            debug(chunk);
-        });
-
-        req.on('end', () => {
-            throw new Error('uncaughtexception manually');
-        });
-    });
-}
-
 app.use(bodyParser.json());
 // The extended option allows to choose between parsing the URL-encoded data
 // with the querystring library (when false) or the qs library (when true).
@@ -58,8 +38,7 @@ app.use(expressValidator({})); // this line must be immediately after any of the
 // app.use(express.static(__dirname + '/../../public'));
 
 // routers
-app.use('/rules', rulesRouter);
-app.use('/passports', passportsRouter);
+app.use('/', router);
 
 // 404
 app.use(notFoundHandler);

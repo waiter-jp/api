@@ -1,9 +1,8 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * redis cacheクライアント
- * @module
  */
-Object.defineProperty(exports, "__esModule", { value: true });
 const waiter = require("@waiter/domain");
 // import * as createDebug from 'debug';
 // const debug = createDebug('waiter:redis');
@@ -17,6 +16,7 @@ function createClient() {
         // tls: <any>{ servername: <string>process.env.REDIS_HOST }
     });
     c.on('error', (err) => {
+        // tslint:disable-next-line:no-console
         console.error(err);
     });
     // c.on('end', () => {

@@ -1,10 +1,9 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * error handler
  * エラーハンドラーミドルウェア
- * @module middlewares.errorHandler
  */
-Object.defineProperty(exports, "__esModule", { value: true });
 const waiter = require("@waiter/domain");
 const http_status_1 = require("http-status");
 const api_1 = require("../error/api");

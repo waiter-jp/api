@@ -1,9 +1,7 @@
 /**
  * error handler
  * エラーハンドラーミドルウェア
- * @module middlewares.errorHandler
  */
-
 import * as waiter from '@waiter/domain';
 import { NextFunction, Request, Response } from 'express';
 import { BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, TOO_MANY_REQUESTS } from 'http-status';

@@ -1,9 +1,7 @@
 /**
  * バリデーターミドルウェア
  * リクエストのパラメータ(query strings or body parameters)に対するバリデーション
- * @module middlewares.validator
  */
-
 import { factory } from '@waiter/domain';
 import * as createDebug from 'debug';
 import { NextFunction, Request, Response } from 'express';
