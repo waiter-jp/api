@@ -16,6 +16,7 @@ function createClient() {
         // tls: <any>{ servername: <string>process.env.REDIS_HOST }
     });
     c.on('error', (err) => {
+        // tslint:disable-next-line:no-console
         console.error(err);
     });
     // c.on('end', () => {
