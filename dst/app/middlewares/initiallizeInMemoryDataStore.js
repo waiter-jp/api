@@ -16,10 +16,14 @@ const createDebug = require("debug");
 const mongoose = require("mongoose");
 const debug = createDebug('waiter-api:middlewares');
 let initialized = false;
+// tslint:disable-next-line:no-single-line-block-comment
+/* istanbul ignore next */
 const INITIALIZE_IN_MEMORY_DATA_INTERVAL = 
 // tslint:disable-next-line:no-magic-numbers
 (process.env.INITIALIZE_IN_MEMORY_DATA_INTERVAL !== undefined) ? Number(process.env.INITIALIZE_IN_MEMORY_DATA_INTERVAL) : 60000;
 // 定期的に同期する
+// tslint:disable-next-line:no-single-line-block-comment
+/* istanbul ignore next */
 setInterval(() => __awaiter(this, void 0, void 0, function* () {
     try {
         debug('initializing in-memory data...');

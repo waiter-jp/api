@@ -10,8 +10,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
-- プロジェクトと規則のマスタデータをMongoDBに保管するように変更
-
 ### Deprecated
 
 ### Removed
@@ -20,7 +18,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Security
 
-## v3.0.0 - 2017-11-30
+## v3.1.0 - 2019-02-09
+
+### Changed
+
+- プロジェクトと規則のマスタデータをMongoDBに保管するように変更
+
+## v3.0.0 - 2018-11-30
 
 ### Added
 
