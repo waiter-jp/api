@@ -8,8 +8,11 @@ import * as expressValidator from 'express-validator';
 import * as helmet from 'helmet';
 
 import errorHandler from './middlewares/errorHandler';
+import initiallizeInMemoryDataStore from './middlewares/initiallizeInMemoryDataStore';
 import notFoundHandler from './middlewares/notFoundHandler';
 import router from './routes/router';
+
+import { connectMongo } from '../connectMongo';
 
 const app = express();
 
@@ -34,6 +37,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator({})); // this line must be immediately after any of the bodyParser middlewares!
 
+app.use(initiallizeInMemoryDataStore);
+
 // 静的ファイル
 // app.use(express.static(__dirname + '/../../public'));
 
@@ -45,5 +50,13 @@ app.use(notFoundHandler);
 
 // error handlers
 app.use(errorHandler);
+
+connectMongo({ defaultConnection: true })
+    .then()
+    .catch((err) => {
+        // tslint:disable-next-line:no-console
+        console.error('connetMongo:', err);
+        process.exit(1);
+    });
 
 export = app;

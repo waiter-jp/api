@@ -82,9 +82,9 @@ jobs:
             echo "env_variables:" >> ./app.yaml
             echo "  NODE_ENV: 'development'" >> ./app.yaml
             echo "  WAITER_PASSPORT_ISSUER: '${WAITER_PASSPORT_ISSUER_DEVELOPMENT}'" >> ./app.yaml
-            echo "  WAITER_RULES: '${WAITER_RULES_DEVELOPMENT}'" >> ./app.yaml
             echo "  WAITER_SECRET: '${WAITER_SECRET_DEVELOPMENT}'" >> ./app.yaml
-            echo "  WAITER_PROJECTS: '${WAITER_PROJECTS_DEVELOPMENT}'" >> ./app.yaml
+            echo "  INITIALIZE_IN_MEMORY_DATA_INTERVAL: '${INITIALIZE_IN_MEMORY_DATA_INTERVAL_DEVELOPMENT}'" >> ./app.yaml
+            echo "  MONGOLAB_URI: '${MONGOLAB_URI_DEVELOPMENT}'" >> ./app.yaml
             echo "  REDIS_HOST: '${REDIS_HOST_DEVELOPMENT}'" >> ./app.yaml
             echo "  REDIS_PORT: ${REDIS_PORT_DEVELOPMENT}" >> ./app.yaml
             echo "  REDIS_KEY: '${REDIS_KEY_DEVELOPMENT}'" >> ./app.yaml
@@ -114,9 +114,9 @@ jobs:
             echo "env_variables:" >> ./app.yaml
             echo "  NODE_ENV: 'test'" >> ./app.yaml
             echo "  WAITER_PASSPORT_ISSUER: '${WAITER_PASSPORT_ISSUER_TEST}'" >> ./app.yaml
-            echo "  WAITER_RULES: '${WAITER_RULES_TEST}'" >> ./app.yaml
             echo "  WAITER_SECRET: '${WAITER_SECRET_TEST}'" >> ./app.yaml
-            echo "  WAITER_PROJECTS: '${WAITER_PROJECTS_TEST}'" >> ./app.yaml
+            echo "  INITIALIZE_IN_MEMORY_DATA_INTERVAL: '${INITIALIZE_IN_MEMORY_DATA_INTERVAL_TEST}'" >> ./app.yaml
+            echo "  MONGOLAB_URI: '${MONGOLAB_URI_TEST}'" >> ./app.yaml
             echo "  REDIS_HOST: '${REDIS_HOST_TEST}'" >> ./app.yaml
             echo "  REDIS_PORT: ${REDIS_PORT_TEST}" >> ./app.yaml
             echo "  REDIS_KEY: '${REDIS_KEY_TEST}'" >> ./app.yaml
@@ -146,9 +146,9 @@ jobs:
             echo "env_variables:" >> ./app.yaml
             echo "  NODE_ENV: 'production'" >> ./app.yaml
             echo "  WAITER_PASSPORT_ISSUER: '${WAITER_PASSPORT_ISSUER_PRODUCTION}'" >> ./app.yaml
-            echo "  WAITER_RULES: '${WAITER_RULES_PRODUCTION}'" >> ./app.yaml
             echo "  WAITER_SECRET: '${WAITER_SECRET_PRODUCTION}'" >> ./app.yaml
-            echo "  WAITER_PROJECTS: '${WAITER_PROJECTS_PRODUCTION}'" >> ./app.yaml
+            echo "  INITIALIZE_IN_MEMORY_DATA_INTERVAL: '${INITIALIZE_IN_MEMORY_DATA_INTERVAL_PRODUCTION}'" >> ./app.yaml
+            echo "  MONGOLAB_URI: '${MONGOLAB_URI_PRODUCTION}'" >> ./app.yaml
             echo "  REDIS_HOST: '${REDIS_HOST_PRODUCTION}'" >> ./app.yaml
             echo "  REDIS_PORT: ${REDIS_PORT_PRODUCTION}" >> ./app.yaml
             echo "  REDIS_KEY: '${REDIS_KEY_PRODUCTION}'" >> ./app.yaml

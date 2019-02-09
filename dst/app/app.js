@@ -8,8 +8,10 @@ const express = require("express");
 const expressValidator = require("express-validator");
 const helmet = require("helmet");
 const errorHandler_1 = require("./middlewares/errorHandler");
+const initiallizeInMemoryDataStore_1 = require("./middlewares/initiallizeInMemoryDataStore");
 const notFoundHandler_1 = require("./middlewares/notFoundHandler");
 const router_1 = require("./routes/router");
+const connectMongo_1 = require("../connectMongo");
 const app = express();
 app.use(cors()); // enable All CORS Requests
 app.use(helmet());
@@ -30,6 +32,7 @@ app.use(bodyParser.json());
 // with the querystring library (when false) or the qs library (when true).
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator({})); // this line must be immediately after any of the bodyParser middlewares!
+app.use(initiallizeInMemoryDataStore_1.default);
 // 静的ファイル
 // app.use(express.static(__dirname + '/../../public'));
 // routers
@@ -38,4 +41,11 @@ app.use('/', router_1.default);
 app.use(notFoundHandler_1.default);
 // error handlers
 app.use(errorHandler_1.default);
+connectMongo_1.connectMongo({ defaultConnection: true })
+    .then()
+    .catch((err) => {
+    // tslint:disable-next-line:no-console
+    console.error('connetMongo:', err);
+    process.exit(1);
+});
 module.exports = app;
