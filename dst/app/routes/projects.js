@@ -31,8 +31,8 @@ projectsRouter.post('/:projectId/passports', (req, __, next) => {
             scope: req.body.scope
         })({
             passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
-            project: new waiter.repository.Project(),
-            rule: new waiter.repository.Rule()
+            project: new waiter.repository.ProjectInMemory(),
+            rule: new waiter.repository.RuleInMemory()
         });
         res.status(http_status_1.CREATED).json({
             token: token
@@ -55,8 +55,8 @@ projectsRouter.get('/:projectId/passports/:scope/currentIssueUnit', (req, __, ne
             scope: req.params.scope
         })({
             passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
-            project: new waiter.repository.Project(),
-            rule: new waiter.repository.Rule()
+            project: new waiter.repository.ProjectInMemory(),
+            rule: new waiter.repository.RuleInMemory()
         });
         res.json(issueUnit);
     }
@@ -66,7 +66,7 @@ projectsRouter.get('/:projectId/passports/:scope/currentIssueUnit', (req, __, ne
 }));
 projectsRouter.get('/:projectId/rules', validator_1.default, (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
-        const ruleRepo = new waiter.repository.Rule();
+        const ruleRepo = new waiter.repository.RuleInMemory();
         const rules = ruleRepo.search({
             project: { ids: [req.params.projectId] }
         });

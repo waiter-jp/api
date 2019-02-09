@@ -30,8 +30,8 @@ projectsRouter.post(
                 scope: <string>req.body.scope
             })({
                 passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
-                project: new waiter.repository.Project(),
-                rule: new waiter.repository.Rule()
+                project: new waiter.repository.ProjectInMemory(),
+                rule: new waiter.repository.RuleInMemory()
             });
 
             res.status(CREATED).json({
@@ -61,8 +61,8 @@ projectsRouter.get(
                 scope: <string>req.params.scope
             })({
                 passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
-                project: new waiter.repository.Project(),
-                rule: new waiter.repository.Rule()
+                project: new waiter.repository.ProjectInMemory(),
+                rule: new waiter.repository.RuleInMemory()
             });
 
             res.json(issueUnit);
@@ -77,7 +77,7 @@ projectsRouter.get(
     validator,
     async (req, res, next) => {
         try {
-            const ruleRepo = new waiter.repository.Rule();
+            const ruleRepo = new waiter.repository.RuleInMemory();
             const rules = ruleRepo.search({
                 project: { ids: [<string>req.params.projectId] }
             });

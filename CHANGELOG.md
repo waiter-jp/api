@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
+- プロジェクトと規則のマスタデータをMongoDBに保管するように変更
+
 ### Deprecated
 
 ### Removed
