@@ -1,8 +1,7 @@
+// tslint:disable:no-implicit-dependencies
 /**
  * バリデーションミドルウェアテスト
- * @ignore
  */
-
 import * as assert from 'assert';
 import * as nock from 'nock';
 import * as sinon from 'sinon';
@@ -31,7 +30,7 @@ describe('validatorMiddleware.default()', () => {
         };
         const params = {
             req: {
-                getValidationResult: () => validatorResult
+                getValidationResult: () => Promise.resolve(validatorResult)
             },
             res: {},
             next: () => undefined

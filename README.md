@@ -1,4 +1,4 @@
-# Waiter サイト流入量コントロールシステム
+# Waiter 許可証発行サービス
 
 [![CircleCI](https://circleci.com/gh/waiter-jp/api.svg?style=svg)](https://circleci.com/gh/waiter-jp/api)
 [![Known Vulnerabilities](https://snyk.io/test/github/waiter-jp/api/badge.svg)](https://snyk.io/test/github/waiter-jp/api)
