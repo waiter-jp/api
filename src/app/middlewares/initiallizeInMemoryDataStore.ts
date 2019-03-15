@@ -1,3 +1,5 @@
+// tslint:disable-next-line:no-single-line-block-comment
+/* istanbul ignore file */
 /**
  * インメモリデーターストアを初期化する
  */
@@ -16,8 +18,6 @@ const INITIALIZE_IN_MEMORY_DATA_INTERVAL =
     (process.env.INITIALIZE_IN_MEMORY_DATA_INTERVAL !== undefined) ? Number(process.env.INITIALIZE_IN_MEMORY_DATA_INTERVAL) : 60000;
 
 // 定期的に同期する
-// tslint:disable-next-line:no-single-line-block-comment
-/* istanbul ignore next */
 setInterval(
     async () => {
         try {
@@ -31,7 +31,7 @@ setInterval(
     INITIALIZE_IN_MEMORY_DATA_INTERVAL
 );
 
-export default /* istanbul ignore next */ async (_: Request, __: Response, next: NextFunction) => {
+export default async (_: Request, __: Response, next: NextFunction) => {
     // プロセスで初期化済でなければ、マスタデータをMongoDBからローカルリポジトリへ同期する
     if (!initialized) {
         await sync();
@@ -41,8 +41,6 @@ export default /* istanbul ignore next */ async (_: Request, __: Response, next:
     next();
 };
 
-// tslint:disable-next-line:no-single-line-block-comment
-/* istanbul ignore next */
 async function sync() {
     await waiter.service.cache.initializeInMemoryDataStore()({
         project: new waiter.repository.Project(mongoose.connection),
