@@ -8,8 +8,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Added
 
-- JsonWebToken自体の期限調整機能を追加
-
 ### Changed
 
 ### Deprecated
@@ -19,6 +17,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Fixed
 
 ### Security
+
+## v3.3.0 - 2019-07-18
+
+### Added
+
+- JsonWebToken自体の期限調整機能を追加
 
 ## v3.2.0 - 2019-03-15
 
