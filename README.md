@@ -53,6 +53,7 @@ Node.js Application
 | `REDIS_HOST`                         | true     | Redis Cache接続ホスト                           |          |
 | `REDIS_PORT`                         | true     | Redis Cache接続ポート                           |          |
 | `REDIS_KEY`                          | true     | Redis Cache接続キー                             |          |
+| `TOKEN_EXPIRES_IN`                   | true     | JWT expiration in seconds                       |          |
 
 ## License
 

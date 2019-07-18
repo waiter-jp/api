@@ -16,6 +16,7 @@ const express_1 = require("express");
 const http_status_1 = require("http-status");
 const redis = require("../../redis");
 const validator_1 = require("../middlewares/validator");
+const TOKEN_EXPIRES_IN = (process.env.TOKEN_EXPIRES_IN !== undefined) ? Number(process.env.TOKEN_EXPIRES_IN) : 0;
 const projectsRouter = express_1.Router();
 /**
  * 許可証発行
@@ -28,7 +29,8 @@ projectsRouter.post('/:projectId/passports', (req, __, next) => {
     try {
         const token = yield waiter.service.passport.issue({
             project: { id: req.params.projectId },
-            scope: req.body.scope
+            scope: req.body.scope,
+            expiresIn: TOKEN_EXPIRES_IN
         })({
             passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
             project: new waiter.repository.ProjectInMemory(),

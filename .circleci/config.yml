@@ -83,6 +83,7 @@ jobs:
             echo "  NODE_ENV: 'development'" >> ./app.yaml
             echo "  WAITER_PASSPORT_ISSUER: '${WAITER_PASSPORT_ISSUER_DEVELOPMENT}'" >> ./app.yaml
             echo "  WAITER_SECRET: '${WAITER_SECRET_DEVELOPMENT}'" >> ./app.yaml
+            echo "  TOKEN_EXPIRES_IN: '${TOKEN_EXPIRES_IN_DEVELOPMENT}'" >> ./app.yaml
             echo "  INITIALIZE_IN_MEMORY_DATA_INTERVAL: '${INITIALIZE_IN_MEMORY_DATA_INTERVAL_DEVELOPMENT}'" >> ./app.yaml
             echo "  MONGOLAB_URI: '${MONGOLAB_URI_DEVELOPMENT}'" >> ./app.yaml
             echo "  REDIS_HOST: '${REDIS_HOST_DEVELOPMENT}'" >> ./app.yaml
@@ -115,6 +116,7 @@ jobs:
             echo "  NODE_ENV: 'test'" >> ./app.yaml
             echo "  WAITER_PASSPORT_ISSUER: '${WAITER_PASSPORT_ISSUER_TEST}'" >> ./app.yaml
             echo "  WAITER_SECRET: '${WAITER_SECRET_TEST}'" >> ./app.yaml
+            echo "  TOKEN_EXPIRES_IN: '${TOKEN_EXPIRES_IN_TEST}'" >> ./app.yaml
             echo "  INITIALIZE_IN_MEMORY_DATA_INTERVAL: '${INITIALIZE_IN_MEMORY_DATA_INTERVAL_TEST}'" >> ./app.yaml
             echo "  MONGOLAB_URI: '${MONGOLAB_URI_TEST}'" >> ./app.yaml
             echo "  REDIS_HOST: '${REDIS_HOST_TEST}'" >> ./app.yaml
@@ -147,6 +149,7 @@ jobs:
             echo "  NODE_ENV: 'production'" >> ./app.yaml
             echo "  WAITER_PASSPORT_ISSUER: '${WAITER_PASSPORT_ISSUER_PRODUCTION}'" >> ./app.yaml
             echo "  WAITER_SECRET: '${WAITER_SECRET_PRODUCTION}'" >> ./app.yaml
+            echo "  TOKEN_EXPIRES_IN: '${TOKEN_EXPIRES_IN_PRODUCTION}'" >> ./app.yaml
             echo "  INITIALIZE_IN_MEMORY_DATA_INTERVAL: '${INITIALIZE_IN_MEMORY_DATA_INTERVAL_PRODUCTION}'" >> ./app.yaml
             echo "  MONGOLAB_URI: '${MONGOLAB_URI_PRODUCTION}'" >> ./app.yaml
             echo "  REDIS_HOST: '${REDIS_HOST_PRODUCTION}'" >> ./app.yaml

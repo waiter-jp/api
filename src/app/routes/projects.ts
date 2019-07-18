@@ -9,6 +9,8 @@ import * as redis from '../../redis';
 
 import validator from '../middlewares/validator';
 
+const TOKEN_EXPIRES_IN = (process.env.TOKEN_EXPIRES_IN !== undefined) ? Number(process.env.TOKEN_EXPIRES_IN) : 0;
+
 const projectsRouter = Router();
 
 /**
@@ -27,7 +29,8 @@ projectsRouter.post(
         try {
             const token = await waiter.service.passport.issue({
                 project: { id: <string>req.params.projectId },
-                scope: <string>req.body.scope
+                scope: <string>req.body.scope,
+                expiresIn: TOKEN_EXPIRES_IN
             })({
                 passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
                 project: new waiter.repository.ProjectInMemory(),
