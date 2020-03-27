@@ -18,6 +18,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Security
 
+## v3.5.0 - 2020-03-27
+
+### Changed
+
+- package.jsonの対応Node.jsバージョンを調整
+
 ## v3.4.0 - 2020-03-27
 
 ### Added
