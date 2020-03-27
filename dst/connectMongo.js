@@ -13,7 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 const createDebug = require("debug");
 const mongoose = require("mongoose");
-const debug = createDebug('cinerino-api:connectMongo');
+const debug = createDebug('waiter-api:connectMongo');
 const PING_INTERVAL = 10000;
 const MONGOLAB_URI = process.env.MONGOLAB_URI;
 const connectOptions = {
@@ -44,19 +44,26 @@ function connectMongo(params) {
             if (connection.readyState === 1) {
                 // 接続済であれば疎通確認
                 let pingResult;
-                yield new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+                yield new Promise((resolve) => {
                     try {
-                        pingResult = yield connection.db.admin()
-                            .ping();
-                        debug('pingResult:', pingResult);
+                        connection.db.admin()
+                            .ping()
+                            .then((result) => {
+                            pingResult = result;
+                            debug('pingResult:', pingResult);
+                        })
+                            .catch((error) => {
+                            // tslint:disable-next-line:no-console
+                            console.error('ping:', error);
+                        });
                     }
                     catch (error) {
                         // tslint:disable-next-line:no-console
-                        console.error('ping:', error);
+                        console.error(error);
                     }
                     // tslint:disable-next-line:no-magic-numbers
                     setTimeout(() => { resolve(); }, 5000);
-                }));
+                });
                 // 疎通確認結果が適性であれば何もしない
                 if (pingResult !== undefined && pingResult.ok === 1) {
                     return;

@@ -8,7 +8,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Added
 
+- ヘルスチェックエンドポイントを追加
+
 ### Changed
+
+- MongoDBコネクション監視調整
 
 ### Deprecated
 

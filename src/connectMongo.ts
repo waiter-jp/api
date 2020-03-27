@@ -4,7 +4,7 @@
 import * as createDebug from 'debug';
 import * as mongoose from 'mongoose';
 
-const debug = createDebug('cinerino-api:connectMongo');
+const debug = createDebug('waiter-api:connectMongo');
 const PING_INTERVAL = 10000;
 const MONGOLAB_URI = <string>process.env.MONGOLAB_URI;
 
@@ -39,14 +39,21 @@ export async function connectMongo(params: {
             if (connection.readyState === 1) {
                 // 接続済であれば疎通確認
                 let pingResult: any;
-                await new Promise(async (resolve) => {
+                await new Promise((resolve) => {
                     try {
-                        pingResult = await connection.db.admin()
-                            .ping();
-                        debug('pingResult:', pingResult);
+                        connection.db.admin()
+                            .ping()
+                            .then((result) => {
+                                pingResult = result;
+                                debug('pingResult:', pingResult);
+                            })
+                            .catch((error) => {
+                                // tslint:disable-next-line:no-console
+                                console.error('ping:', error);
+                            });
                     } catch (error) {
                         // tslint:disable-next-line:no-console
-                        console.error('ping:', error);
+                        console.error(error);
                     }
 
                     // tslint:disable-next-line:no-magic-numbers
