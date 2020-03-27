@@ -3,6 +3,7 @@
  */
 import * as express from 'express';
 
+import healthRouter from './health';
 import projectsRouter from './projects';
 
 const router = express.Router();
@@ -12,6 +13,9 @@ const router = express.Router();
 //   debug('Time: ', Date.now())
 //   next()
 // })
+
+// 例外的なpublic router
+router.use('/health', healthRouter);
 
 router.use('/projects', projectsRouter);
 
