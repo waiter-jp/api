@@ -8,11 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Added
 
-- ヘルスチェックエンドポイントを追加
-
 ### Changed
-
-- MongoDBコネクション監視調整
 
 ### Deprecated
 
@@ -21,6 +17,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Fixed
 
 ### Security
+
+## v3.4.0 - 2020-03-27
+
+### Added
+
+- ヘルスチェックエンドポイントを追加
+
+### Changed
+
+- MongoDBコネクション監視調整
 
 ## v3.3.0 - 2019-07-18
 

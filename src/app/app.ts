@@ -31,6 +31,14 @@ app.use(helmet.hsts({
     includeSubdomains: false
 }));
 
+// api version
+// tslint:disable-next-line:no-require-imports no-var-requires
+const packageInfo = require('../../package.json');
+app.use((__, res, next) => {
+    res.setHeader('X-API-Version', <string>packageInfo.version);
+    next();
+});
+
 app.use(bodyParser.json());
 // The extended option allows to choose between parsing the URL-encoded data
 // with the querystring library (when false) or the qs library (when true).
