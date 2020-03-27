@@ -10,8 +10,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
-- package.jsonの対応Node.jsバージョンを調整
-
 ### Deprecated
 
 ### Removed
@@ -19,6 +17,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Fixed
 
 ### Security
+
+## v3.5.0 - 2020-03-27
+
+### Changed
+
+- package.jsonの対応Node.jsバージョンを調整
 
 ## v3.4.0 - 2020-03-27
 
