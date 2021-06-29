@@ -33,7 +33,7 @@ projectsRouter.post('/:projectId/passports', (req, __, next) => {
             expiresIn: TOKEN_EXPIRES_IN
         })({
             passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
-            project: new waiter.repository.ProjectInMemory(),
+            // project: new waiter.repository.ProjectInMemory(),
             rule: new waiter.repository.RuleInMemory()
         });
         res.status(http_status_1.CREATED).json({
@@ -57,7 +57,7 @@ projectsRouter.get('/:projectId/passports/:scope/currentIssueUnit', (req, __, ne
             scope: req.params.scope
         })({
             passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
-            project: new waiter.repository.ProjectInMemory(),
+            // project: new waiter.repository.ProjectInMemory(),
             rule: new waiter.repository.RuleInMemory()
         });
         res.json(issueUnit);

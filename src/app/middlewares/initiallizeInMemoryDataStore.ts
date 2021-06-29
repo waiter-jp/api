@@ -43,7 +43,7 @@ export default async (_: Request, __: Response, next: NextFunction) => {
 
 async function sync() {
     await waiter.service.cache.initializeInMemoryDataStore()({
-        project: new waiter.repository.Project(mongoose.connection),
+        // project: new waiter.repository.Project(mongoose.connection),
         rule: new waiter.repository.Rule(mongoose.connection)
     });
 }

@@ -33,7 +33,7 @@ projectsRouter.post(
                 expiresIn: TOKEN_EXPIRES_IN
             })({
                 passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
-                project: new waiter.repository.ProjectInMemory(),
+                // project: new waiter.repository.ProjectInMemory(),
                 rule: new waiter.repository.RuleInMemory()
             });
 
@@ -64,7 +64,7 @@ projectsRouter.get(
                 scope: <string>req.params.scope
             })({
                 passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
-                project: new waiter.repository.ProjectInMemory(),
+                // project: new waiter.repository.ProjectInMemory(),
                 rule: new waiter.repository.RuleInMemory()
             });
 

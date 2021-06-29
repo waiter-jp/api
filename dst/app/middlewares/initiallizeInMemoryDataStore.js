@@ -45,7 +45,7 @@ exports.default = (_, __, next) => __awaiter(this, void 0, void 0, function* () 
 function sync() {
     return __awaiter(this, void 0, void 0, function* () {
         yield waiter.service.cache.initializeInMemoryDataStore()({
-            project: new waiter.repository.Project(mongoose.connection),
+            // project: new waiter.repository.Project(mongoose.connection),
             rule: new waiter.repository.Rule(mongoose.connection)
         });
     });
