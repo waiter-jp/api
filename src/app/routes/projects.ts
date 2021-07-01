@@ -20,7 +20,9 @@ projectsRouter.post(
     '/:projectId/passports',
     (req, __, next) => {
         // クライアントが何の許可証かを制御するためのスコープ
-        req.checkBody('scope', 'invalid scope').notEmpty().withMessage('scope is required');
+        req.checkBody('scope', 'invalid scope')
+            .notEmpty()
+            .withMessage('scope is required');
 
         next();
     },
@@ -37,9 +39,10 @@ projectsRouter.post(
                 rule: new waiter.repository.RuleInMemory()
             });
 
-            res.status(CREATED).json({
-                token: token
-            });
+            res.status(CREATED)
+                .json({
+                    token: token
+                });
         } catch (error) {
             next(error);
         }
@@ -52,7 +55,9 @@ projectsRouter.post(
 projectsRouter.get(
     '/:projectId/passports/:scope/currentIssueUnit',
     (req, __, next) => {
-        req.checkParams('scope', 'invalid scope').notEmpty().withMessage('scope is required');
+        req.checkParams('scope', 'invalid scope')
+            .notEmpty()
+            .withMessage('scope is required');
 
         next();
     },

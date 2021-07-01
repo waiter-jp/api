@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getClient = void 0;
 /**
  * redis cacheクライアント
  */
@@ -24,15 +25,6 @@ function createClient() {
     // });
     return c;
 }
-/**
- * 接続クライアントをリセットする
- * 接続リトライをギブアップした場合に呼び出される
- *
- * @see retry_strategy
- */
-// function resetClient() {
-//     client = undefined;
-// }
 function getClient() {
     if (client === undefined) {
         client = createClient();

@@ -61,7 +61,8 @@ export default (err: any, __: Request, res: Response, next: NextFunction) => {
         }
     }
 
-    res.status(apiError.code).json({
-        error: apiError.toObject()
-    });
+    res.status(apiError.code)
+        .json({
+            error: apiError.toObject()
+        });
 };

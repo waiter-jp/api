@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Changed
 
 - プロジェクトリポジトリ参照を廃止
+- update packages
 
 ### Deprecated
 
