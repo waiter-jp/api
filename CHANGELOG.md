@@ -10,9 +10,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ### Changed
 
-- プロジェクトリポジトリ参照を廃止
-- update packages
-
 ### Deprecated
 
 ### Removed
@@ -20,6 +17,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ### Fixed
 
 ### Security
+
+## v3.6.0 - 2021-07-02
+
+### Changed
+
+- プロジェクトリポジトリ参照を廃止
+- update packages
 
 ## v3.5.0 - 2020-03-27
 
