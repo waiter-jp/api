@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -24,7 +25,7 @@ const INITIALIZE_IN_MEMORY_DATA_INTERVAL =
 // tslint:disable-next-line:no-magic-numbers
 (process.env.INITIALIZE_IN_MEMORY_DATA_INTERVAL !== undefined) ? Number(process.env.INITIALIZE_IN_MEMORY_DATA_INTERVAL) : 60000;
 // 定期的に同期する
-setInterval(() => __awaiter(this, void 0, void 0, function* () {
+setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
     try {
         debug('initializing in-memory data...');
         yield sync();
@@ -34,7 +35,7 @@ setInterval(() => __awaiter(this, void 0, void 0, function* () {
         console.error(error);
     }
 }), INITIALIZE_IN_MEMORY_DATA_INTERVAL);
-exports.default = (_, __, next) => __awaiter(this, void 0, void 0, function* () {
+exports.default = (_, __, next) => __awaiter(void 0, void 0, void 0, function* () {
     // プロセスで初期化済でなければ、マスタデータをMongoDBからローカルリポジトリへ同期する
     if (!initialized) {
         yield sync();
@@ -45,7 +46,7 @@ exports.default = (_, __, next) => __awaiter(this, void 0, void 0, function* () 
 function sync() {
     return __awaiter(this, void 0, void 0, function* () {
         yield waiter.service.cache.initializeInMemoryDataStore()({
-            project: new waiter.repository.Project(mongoose.connection),
+            // project: new waiter.repository.Project(mongoose.connection),
             rule: new waiter.repository.Rule(mongoose.connection)
         });
     });

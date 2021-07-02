@@ -39,7 +39,7 @@ export async function connectMongo(params: {
             if (connection.readyState === 1) {
                 // 接続済であれば疎通確認
                 let pingResult: any;
-                await new Promise((resolve) => {
+                await new Promise<void>((resolve) => {
                     try {
                         connection.db.admin()
                             .ping()

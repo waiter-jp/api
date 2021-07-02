@@ -21,7 +21,7 @@ healthRouter.get(
         try {
             await mongoose.connection.db.admin()
                 .ping();
-            await new Promise(async (resolve, reject) => {
+            await new Promise<void>(async (resolve, reject) => {
                 let givenUpChecking = false;
 
                 // redisサーバー接続が生きているかどうか確認

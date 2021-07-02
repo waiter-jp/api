@@ -29,16 +29,6 @@ function createClient() {
     return c;
 }
 
-/**
- * 接続クライアントをリセットする
- * 接続リトライをギブアップした場合に呼び出される
- *
- * @see retry_strategy
- */
-// function resetClient() {
-//     client = undefined;
-// }
-
 export function getClient() {
     if (client === undefined) {
         client = createClient();

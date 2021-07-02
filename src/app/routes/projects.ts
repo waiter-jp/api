@@ -20,7 +20,9 @@ projectsRouter.post(
     '/:projectId/passports',
     (req, __, next) => {
         // クライアントが何の許可証かを制御するためのスコープ
-        req.checkBody('scope', 'invalid scope').notEmpty().withMessage('scope is required');
+        req.checkBody('scope', 'invalid scope')
+            .notEmpty()
+            .withMessage('scope is required');
 
         next();
     },
@@ -33,13 +35,14 @@ projectsRouter.post(
                 expiresIn: TOKEN_EXPIRES_IN
             })({
                 passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
-                project: new waiter.repository.ProjectInMemory(),
+                // project: new waiter.repository.ProjectInMemory(),
                 rule: new waiter.repository.RuleInMemory()
             });
 
-            res.status(CREATED).json({
-                token: token
-            });
+            res.status(CREATED)
+                .json({
+                    token: token
+                });
         } catch (error) {
             next(error);
         }
@@ -52,7 +55,9 @@ projectsRouter.post(
 projectsRouter.get(
     '/:projectId/passports/:scope/currentIssueUnit',
     (req, __, next) => {
-        req.checkParams('scope', 'invalid scope').notEmpty().withMessage('scope is required');
+        req.checkParams('scope', 'invalid scope')
+            .notEmpty()
+            .withMessage('scope is required');
 
         next();
     },
@@ -64,7 +69,7 @@ projectsRouter.get(
                 scope: <string>req.params.scope
             })({
                 passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
-                project: new waiter.repository.ProjectInMemory(),
+                // project: new waiter.repository.ProjectInMemory(),
                 rule: new waiter.repository.RuleInMemory()
             });
 

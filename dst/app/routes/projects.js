@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -23,9 +24,11 @@ const projectsRouter = express_1.Router();
  */
 projectsRouter.post('/:projectId/passports', (req, __, next) => {
     // クライアントが何の許可証かを制御するためのスコープ
-    req.checkBody('scope', 'invalid scope').notEmpty().withMessage('scope is required');
+    req.checkBody('scope', 'invalid scope')
+        .notEmpty()
+        .withMessage('scope is required');
     next();
-}, validator_1.default, (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+}, validator_1.default, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const token = yield waiter.service.passport.issue({
             project: { id: req.params.projectId },
@@ -33,10 +36,11 @@ projectsRouter.post('/:projectId/passports', (req, __, next) => {
             expiresIn: TOKEN_EXPIRES_IN
         })({
             passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
-            project: new waiter.repository.ProjectInMemory(),
+            // project: new waiter.repository.ProjectInMemory(),
             rule: new waiter.repository.RuleInMemory()
         });
-        res.status(http_status_1.CREATED).json({
+        res.status(http_status_1.CREATED)
+            .json({
             token: token
         });
     }
@@ -48,16 +52,18 @@ projectsRouter.post('/:projectId/passports', (req, __, next) => {
  * クライアントIDとスコープから、現在の許可証数を取得する
  */
 projectsRouter.get('/:projectId/passports/:scope/currentIssueUnit', (req, __, next) => {
-    req.checkParams('scope', 'invalid scope').notEmpty().withMessage('scope is required');
+    req.checkParams('scope', 'invalid scope')
+        .notEmpty()
+        .withMessage('scope is required');
     next();
-}, validator_1.default, (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+}, validator_1.default, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const issueUnit = yield waiter.service.passport.currentIssueUnit({
             project: { id: req.params.projectId },
             scope: req.params.scope
         })({
             passportIssueUnit: new waiter.repository.PassportIssueUnit(redis.getClient()),
-            project: new waiter.repository.ProjectInMemory(),
+            // project: new waiter.repository.ProjectInMemory(),
             rule: new waiter.repository.RuleInMemory()
         });
         res.json(issueUnit);
@@ -66,7 +72,7 @@ projectsRouter.get('/:projectId/passports/:scope/currentIssueUnit', (req, __, ne
         next(error);
     }
 }));
-projectsRouter.get('/:projectId/rules', validator_1.default, (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+projectsRouter.get('/:projectId/rules', validator_1.default, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const ruleRepo = new waiter.repository.RuleInMemory();
         const rules = ruleRepo.search({
